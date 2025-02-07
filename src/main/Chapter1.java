@@ -116,7 +116,7 @@ public class Chapter1 {
     }
 
     private ImageView createSpeakerImage(String speaker) {
-        String imagePath = speaker.equals("คเชน") ? "/resources/cashen_normal.jpeg" : "/resources/friend.jpeg";
+        String imagePath = (speaker.equals("คเชน") ? "/resources/cashen_normal.jpeg" : "/resources/friend.jpeg");
         ImageView img = createImageView(imagePath, 200, 300);
         return img;
     }
