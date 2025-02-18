@@ -1,3 +1,4 @@
+
 package main;
 
 import javafx.animation.KeyFrame;
@@ -178,3 +179,4 @@ public class Chapter1 {
         primaryStage.setScene(new Scene(nextSceneRoot, 968, 648));
     }
 }
+
