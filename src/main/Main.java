@@ -21,7 +21,6 @@ import javafx.util.Duration;
 
 public class Main extends Application {
 
-    /*** Game Data ***/
     private String[] storyTexts = {
         "น้องมีฮัก ฮักมีหน่อย อย่าให้น้องคอย... คอยอยู่ทุกมื่อ    \nLet's Go!!!",
         "มองมาตั้งนาน ส่องเบิ่งตั้งแต่เมื่อวานแล้ะ อ้ายมาแต่ใส เป็นจังได๋ถึงเป็นตาฮักจังซี่ล่ะ",
@@ -92,15 +91,6 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
     }
 
-    private void showNextScene(Stage primaryStage) {
-        StackPane nextSceneRoot = new StackPane();
-        nextSceneRoot.setStyle("-fx-background-color: black;");
-        Text endText = new Text("End of the Scene...");
-        endText.setStyle("-fx-font-size: 40px; -fx-fill: white; -fx-font-family: 'Courier New';");
-        nextSceneRoot.getChildren().add(endText);
-        primaryStage.setScene(new Scene(nextSceneRoot, 968, 648));
-    }
-
     /*** Helper Functions ***/
     private ImageView createImageView(String path, double width, double height) {
         ImageView imageView = new ImageView(new Image(getClass().getResource(path).toExternalForm()));
@@ -132,8 +122,10 @@ public class Main extends Application {
             timeline.stop();
             timeline = createTimeline(textBox);
             timeline.play();
-        } else {
-            showNextScene(primaryStage);
+        } 
+        else {
+        	showLoadingScene(primaryStage);
+            new Timeline(new KeyFrame(Duration.seconds(2), e -> new Chapter1().startChapter(primaryStage))).play();
         }
     }
 
@@ -153,7 +145,5 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        //fdsafasdfasdfasdf
-        //fsdfsdfs
     }
 }
