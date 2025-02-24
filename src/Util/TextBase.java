@@ -15,7 +15,7 @@ public class TextBase {
 			
 			while((line = reader.readLine()) != null) {
 				line = line.replace("\\n", "\n");
-				String[] splitTexts = line.split("\\$", 4);
+				String[] splitTexts = line.split("\\$", 7);
 				
 				texts.add(splitTexts);
 			}

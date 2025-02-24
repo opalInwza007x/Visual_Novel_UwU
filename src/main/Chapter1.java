@@ -27,30 +27,6 @@ import java.net.URL;
 import Util.TextBase;
 
 public class Chapter1 {
-//	private String[][] dialog = {
-//	    {"normal","เพื่อน", "เห้ย คเชน มีเรื่องไรป่าว เห็นนั่งเหม่ออยู่คนเดียวมาสักพักละ","whoosh"},
-//	    {"smile","คเชน", "อ๋อ ไม่มีไร ช่วงนี้เครียดเรื่องเงินว่ะ","pop"},
-//	    {"normal","เพื่อน", "ที่บ้านการเงินไม่ดีหรอเพื่อน ไม่เห็นเคยเล่าให้ฟังเลย","whoosh"},
-//	    {"normal","คเชน", "ป่าว พอดีอยากหาตังไปเติมซื้อ Minecraft ไอดีแท้น่ะ","pop"},
-//	    {"normal","เพื่อน", "...","whoosh"},
-//	    {"normal","เพื่อน", "ช่างเหอะ ช่วงนี้ได้ยินเรื่องเพื่อนผู้หญิงห้องข้าง ๆ เราป้ะ","pop"},
-//	    {"smile","คเชน", "ทำไม ? มีไรหรอ ?","whoosh"},
-//	    {"normal","เพื่อน", "เธอก็เป็นเพื่อนรุ่นเดียวกับเรานี่แหละแถมน่ารักดีด้วย แต่ติดตรงที่เธอมีบางอย่างแปลก ๆ นี่สิ","pop"},
-//	    {"normal","คเชน", "บางอย่างแปลก ๆ ?","whoosh"},
-//	    {"normal","เพื่อน", "เธอน่ะ ห่อเนื้อวัว Thai Wagyu แบบ medium rare มากินที่โรงเรียนทุกวันเลย","pop"},
-//	    {"normal","เพื่อน", "ไม่อยากจะคิดเลยว่าทำไมเธอไม่กินซอยจุ๊กันนะ ของขึ้นชื่อบ้านเราแท้ ๆ เพราะอย่างงี้ไงเธอถึงไม่มีเพื่อนคบซักคนอะ","whoosh"},
-//	    {"smile","คเชน", "อ๋อ… จำได้ละ แต่กินเนื้อดิบ ๆ มันก็ไม่ดีนะเว้ย อย่างน้อยก็ควรทำเนื้อให้สุกก่อนกินสิ เธอทำถูกแล้วล่ะ ถือว่าเป็นการปลูกฝังค่านิยมดี ๆ ให้รุ่นน้องในรร. ด้วยไง","pop"},
-//	    {"normal","คเชน", "Dev เกมนี้คิดบทมาดีจริง ๆ","wow"},
-//	    {"normal","เพื่อน", "พูดถึงใครอะ ?","pop"},
-//	    {"normal","คเชน", "เอาเถอะ... แต่จริง ๆ ที่เธอไม่มีเพื่อนอาจจะเป็นเพราะมีแต่คนแบบนายอยู่ในโรงเรียนก็ได้นะ","whoosh"},
-//	    {"normal","เพื่อน", ":ArchettoLOOKATYOU: :ArchettoLOOKATYOU:","pop"},
-//	    {"normal","เพื่อน", "เชื่อครับไม่โม้... แต่ฉันได้ยินมาว่าเธอก็พยายามหาเพื่อนอยู่นะ แต่ไม่มีใครอยากคุยกับเธอสักคนเลย","whoosh"},
-//	    {"normal","เพื่อน", "มีแต่คนบอกว่าเวลาอยู่กับเธอแล้วมันไม่สบายใจ","pop"},
-//	    {"normal","เพื่อน", "ฉันก็รู้สึกคล้ายกัน ใครจะอยู่ก็อยู่ ข้าไม่อยู่แล้ว บรรยากาศรอบตัวเธอมันเหมือนเหตุการณ์ในหนังผีที่เราไปดูมาเมื่อตอนนั้นเลย","whoosh"},
-//	    {"normal","คเชน", "เพ้อเจ้อ ดูธี่หยดแล้วหลอน","wow"},
-//	    {"normal","คเชน", "ไปนั่งที่เถอะ อาจารย์เข้าห้องมาแล้ว","whoosh"}
-//	};
-	
 	private TextBase storyTexts = new TextBase("src/resources/texts/Chapter1.txt");
 	
 	private int currentTextIndex = 0;
@@ -60,17 +36,20 @@ public class Chapter1 {
     private MediaPlayer backgroundMusic;
     private MediaPlayer effectPlayer;
     private MediaPlayer effecttalking;
-
+    private StackPane stackPane;
+    private VBox root = new VBox(10);
+    TextFlow textBox;
+    
     public void startChapter(Stage primaryStage) {
     	playBackgroundMusic();
     	loadSoundEffect();
-        VBox root = new VBox(10);
+        
         root.setAlignment(Pos.CENTER);
         
        
-        ImageView background = createImageView("/resources/background/classroomTest.jpg", 968, 486);
+        ImageView background = createImageView("/resources/classroomTest.jpg", 968, 486);
 
-        TextFlow textBox = new TextFlow();
+         textBox = new TextFlow();
         textBox.setPadding(new Insets(10));
         textBox.setPrefHeight(162);
         textBox.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-padding: 10px;");
@@ -90,7 +69,7 @@ public class Chapter1 {
         HBox speakerPane = new HBox(50, friendImage, cashenImage);
         speakerPane.setAlignment(Pos.BOTTOM_CENTER);
 
-        StackPane stackPane = new StackPane(background, speakerPane);
+        stackPane = new StackPane(background, speakerPane);
 
         timeline = createTimeline(textBox);
         timeline.play();
@@ -102,12 +81,12 @@ public class Chapter1 {
     
     private void playBackgroundMusic() {
         try {
-            URL resource = getClass().getResource("/resources/sound/bgChap1.mp3");
+            URL resource = getClass().getResource("/resources/bgChap1.mp3");
             if (resource != null) {
                 Media media = new Media(resource.toExternalForm());
                 backgroundMusic = new MediaPlayer(media);
                 backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE); // เล่นวนลูป
-                backgroundMusic.setVolume(0.5); // ตั้งค่าความดัง (0.0 - 1.0)
+                backgroundMusic.setVolume(0.7); // ตั้งค่าความดัง (0.0 - 1.0)
                 backgroundMusic.play();
             } else {
                 System.out.println("Error: Background music file not found!");
@@ -116,12 +95,11 @@ public class Chapter1 {
             e.printStackTrace();
         }
     }
-    
     private void loadSoundEffect() {
     	 try {
-    	        URL whooshURL = getClass().getResource("/resources/sound/whoosh.mp3");
-    	        URL popURL = getClass().getResource("/resources/sound/pop.mp3");
-    	        URL wowURL = getClass().getResource("/resources/sound/wow.mp3");
+    	        URL whooshURL = getClass().getResource("/resources/whoosh.mp3");
+    	        URL popURL = getClass().getResource("/resources/pop.mp3");
+    	        URL wowURL = getClass().getResource("/resources/wow.mp3");
 
     	        if (whooshURL != null && popURL != null &&  wowURL != null) {
     	            effectPlayer = new MediaPlayer(new Media(whooshURL.toExternalForm()));
@@ -168,7 +146,9 @@ public class Chapter1 {
             playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[3]); // เล่นเสียงเอฟเฟกต์
          // อัปเดตรูปภาพของตัวละครที่กำลังพูด
             updateCharacterImages();
-            
+            if(storyTexts.getStoryTexts().get(currentTextIndex)[4].equals("ask2")) {
+            	createAnswerBoxFor2(primaryStage,textBox);
+            }
             timeline.stop();
             timeline = createTimeline(textBox);
             timeline.play();
@@ -176,6 +156,42 @@ public class Chapter1 {
             showNextScene(primaryStage);
         }
     }
+    private void createAnswerBoxFor2(Stage primaryStage, TextFlow textBox) {
+        Button answerButton1 = createButton("Yes!", "rgba(0, 128, 255, 0.8)", 18);
+        Button answerButton2 = createButton("No!", "rgba(0, 128, 255, 0.8)", 18);
+        VBox answerBox = new VBox(10);
+        answerButton1.setOnAction(event -> {
+            currentTextIndex += Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[4+1]);
+
+            if (textBox != null) {
+                textBox.getChildren().clear();
+            }
+
+            handleNextText(primaryStage, textBox);
+            stackPane.getChildren().remove(answerBox);
+        });
+
+        answerButton2.setOnAction(event -> {
+        	 currentTextIndex += Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[4+2]);
+
+            if (textBox != null) {
+                textBox.getChildren().clear();
+            }
+
+            handleNextText(primaryStage, textBox);
+            stackPane.getChildren().remove(answerBox);
+        });
+
+        // ใช้ VBox เพื่อวางปุ่มเรียงกันในแนวตั้ง
+         // 10 คือ spacing ระหว่างปุ่ม
+        answerBox.setAlignment(Pos.CENTER);
+        answerBox.getChildren().addAll(answerButton1, answerButton2);
+
+        // วาง VBox ไว้ตรงกลาง StackPane
+        StackPane.setAlignment(answerBox, Pos.CENTER);
+        stackPane.getChildren().add(answerBox);
+    }
+
     private void updateCharacterImages() {
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
         String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
@@ -188,10 +204,10 @@ public class Chapter1 {
     }
     private String getImagePath(String speaker, String emotion) {
         if (speaker.equals("คเชน")) {
-            if (emotion.equals("normal")) return "/resources/cashen/cashen_normal.png";
-            if (emotion.equals("smile")) return "/resources/cashen/cashen_smile.png";
+            if (emotion.equals("normal")) return "/resources/cashen_normal.png";
+            if (emotion.equals("smile")) return "/resources/cashen_smile.png";
         } else if (speaker.equals("เพื่อน")) {
-            return "/resources/friend/friend_normal.png";
+            return "/resources/friend_normal.png";
         }
         return "/resources/default.png"; // กรณีผิดพลาด ให้ใช้ภาพ default
     }
@@ -199,7 +215,7 @@ public class Chapter1 {
         if (effectPlayer != null) {
             effectPlayer.stop(); // หยุดเสียงเก่าก่อนเล่นใหม่
         }
-        String effectPath = "/resources/sound/" + effect + ".mp3"; 
+        String effectPath = "/resources/" + effect + ".mp3"; 
         
         URL effectURL = getClass().getResource(effectPath);
 
@@ -212,12 +228,12 @@ public class Chapter1 {
     }
    
     private void playTalkingSound() {
-    	String effectPath = "/resources/sound/talking.mp3";
+    	String effectPath = "/resources/talking.mp3";
     	
     	URL talkingURL = getClass().getResource(effectPath);
     	if (talkingURL != null) {
     		effecttalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
-    		effecttalking.setVolume(0.2);
+    		effecttalking.setVolume(0.05);
     		effecttalking.play();
         } else {
             System.out.println("Error: Effect sound file talking.mp3 not found!");
@@ -225,7 +241,7 @@ public class Chapter1 {
     }
     
     private ImageView createSpeakerImage(String speaker) {
-        String imagePath = (speaker.equals("คเชน") ? "/resources/cashen/cashen_normal.png" : "/resources/friend/friend_normal.png");
+        String imagePath = (speaker.equals("คเชน") ? "/resources/cashen_normal.png" : "/resources/friend_normal.png");
         ImageView  img;
         if( speaker.equals("เพื่อน")) {
         	img = createImageView(imagePath, 260, 300);
@@ -237,7 +253,7 @@ public class Chapter1 {
     }
 
     private void updateSpeakerVisibility() {
-        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+    	String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setOpacity(1.0);
             friendImage.setOpacity(0.8);
@@ -248,8 +264,8 @@ public class Chapter1 {
     }
 
     private Timeline createTimeline(TextFlow textBox) {
-        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
-        String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[2];
+    	String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+		String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[2];
 
         Timeline timeline = new Timeline();
         textBox.getChildren().clear(); // เคลียร์ข้อความเก่าก่อนเริ่มใหม่
@@ -258,11 +274,11 @@ public class Chapter1 {
         Text speakerText = new Text(currentSpeaker + " \n");
         
         speakerText.setFill(Color.RED); // เปลี่ยนสีเป็นแดงให้ดูเด่น
-        speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 20));
+        speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 20));
         // ข้อความที่พิมพ์ทีละตัว
         Text contentText = new Text();
         
-        contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
+        contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 18));
         textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
         
         for (int i = 0; i < currentText.length(); i++) {
@@ -297,16 +313,14 @@ public class Chapter1 {
             // ทำให้ชื่อผู้พูดดูเด่น
             Text speakerText = new Text(currentSpeaker + " \n");
             speakerText.setFill(Color.RED);
-            speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 20));
+            speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 20));
             
             Text contentText = new Text(currentText);
             
-            contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
+            contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 18));
             textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
     		return true;
     	}
     	return false;
     }
 }
-
-
