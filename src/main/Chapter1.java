@@ -51,7 +51,7 @@ public class Chapter1 {
 //	    {"normal","คเชน", "ไปนั่งที่เถอะ อาจารย์เข้าห้องมาแล้ว","whoosh"}
 //	};
 	
-	private TextBase storyTexts = new TextBase("/resources/texts/Chapter1.txt");
+	private TextBase storyTexts = new TextBase("src/resources/texts/Chapter1.txt");
 	
 	private int currentTextIndex = 0;
     private Timeline timeline;

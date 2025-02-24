@@ -11,14 +11,11 @@ public class TextBase {
 	
 	public TextBase(String url) {
 		try (BufferedReader reader = new BufferedReader(new FileReader(url))){
-			StringBuilder content = new StringBuilder();
 			String line;
 			
 			while((line = reader.readLine()) != null) {
-				content.append(line).append("\n");
-				
 				line = line.replace("\\n", "\n");
-				String[] splitTexts = line.split("\\$");
+				String[] splitTexts = line.split("\\$", 4);
 				
 				System.out.println(splitTexts.length);
 				texts.add(splitTexts);
