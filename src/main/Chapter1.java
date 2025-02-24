@@ -24,31 +24,35 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
 
-public class Chapter1 {
-	private String[][] storyTexts = {
-	    {"normal","เพื่อน", "เห้ย คเชน มีเรื่องไรป่าว เห็นนั่งเหม่ออยู่คนเดียวมาสักพักละ","whoosh"},
-	    {"smile","คเชน", "อ๋อ ไม่มีไร ช่วงนี้เครียดเรื่องเงินว่ะ","pop"},
-	    {"normal","เพื่อน", "ที่บ้านการเงินไม่ดีหรอเพื่อน ไม่เห็นเคยเล่าให้ฟังเลย","whoosh"},
-	    {"normal","คเชน", "ป่าว พอดีอยากหาตังไปเติมซื้อ Minecraft ไอดีแท้น่ะ","pop"},
-	    {"normal","เพื่อน", "...","whoosh"},
-	    {"normal","เพื่อน", "ช่างเหอะ ช่วงนี้ได้ยินเรื่องเพื่อนผู้หญิงห้องข้าง ๆ เราป้ะ","pop"},
-	    {"smile","คเชน", "ทำไม ? มีไรหรอ ?","whoosh"},
-	    {"normal","เพื่อน", "เธอก็เป็นเพื่อนรุ่นเดียวกับเรานี่แหละแถมน่ารักดีด้วย แต่ติดตรงที่เธอมีบางอย่างแปลก ๆ นี่สิ","pop"},
-	    {"normal","คเชน", "บางอย่างแปลก ๆ ?","whoosh"},
-	    {"normal","เพื่อน", "เธอน่ะ ห่อเนื้อวัว Thai Wagyu แบบ medium rare มากินที่โรงเรียนทุกวันเลย","pop"},
-	    {"normal","เพื่อน", "ไม่อยากจะคิดเลยว่าทำไมเธอไม่กินซอยจุ๊กันนะ ของขึ้นชื่อบ้านเราแท้ ๆ เพราะอย่างงี้ไงเธอถึงไม่มีเพื่อนคบซักคนอะ","whoosh"},
-	    {"smile","คเชน", "อ๋อ… จำได้ละ แต่กินเนื้อดิบ ๆ มันก็ไม่ดีนะเว้ย อย่างน้อยก็ควรทำเนื้อให้สุกก่อนกินสิ เธอทำถูกแล้วล่ะ ถือว่าเป็นการปลูกฝังค่านิยมดี ๆ ให้รุ่นน้องในรร. ด้วยไง","pop"},
-	    {"normal","คเชน", "Dev เกมนี้คิดบทมาดีจริง ๆ","wow"},
-	    {"normal","เพื่อน", "พูดถึงใครอะ ?","pop"},
-	    {"normal","คเชน", "เอาเถอะ... แต่จริง ๆ ที่เธอไม่มีเพื่อนอาจจะเป็นเพราะมีแต่คนแบบนายอยู่ในโรงเรียนก็ได้นะ","whoosh"},
-	    {"normal","เพื่อน", ":ArchettoLOOKATYOU: :ArchettoLOOKATYOU:","pop"},
-	    {"normal","เพื่อน", "เชื่อครับไม่โม้... แต่ฉันได้ยินมาว่าเธอก็พยายามหาเพื่อนอยู่นะ แต่ไม่มีใครอยากคุยกับเธอสักคนเลย","whoosh"},
-	    {"normal","เพื่อน", "มีแต่คนบอกว่าเวลาอยู่กับเธอแล้วมันไม่สบายใจ","pop"},
-	    {"normal","เพื่อน", "ฉันก็รู้สึกคล้ายกัน ใครจะอยู่ก็อยู่ ข้าไม่อยู่แล้ว บรรยากาศรอบตัวเธอมันเหมือนเหตุการณ์ในหนังผีที่เราไปดูมาเมื่อตอนนั้นเลย","whoosh"},
-	    {"normal","คเชน", "เพ้อเจ้อ ดูธี่หยดแล้วหลอน","wow"},
-	    {"normal","คเชน", "ไปนั่งที่เถอะ อาจารย์เข้าห้องมาแล้ว","whoosh"}
-	};
+import Util.TextBase;
 
+public class Chapter1 {
+//	private String[][] dialog = {
+//	    {"normal","เพื่อน", "เห้ย คเชน มีเรื่องไรป่าว เห็นนั่งเหม่ออยู่คนเดียวมาสักพักละ","whoosh"},
+//	    {"smile","คเชน", "อ๋อ ไม่มีไร ช่วงนี้เครียดเรื่องเงินว่ะ","pop"},
+//	    {"normal","เพื่อน", "ที่บ้านการเงินไม่ดีหรอเพื่อน ไม่เห็นเคยเล่าให้ฟังเลย","whoosh"},
+//	    {"normal","คเชน", "ป่าว พอดีอยากหาตังไปเติมซื้อ Minecraft ไอดีแท้น่ะ","pop"},
+//	    {"normal","เพื่อน", "...","whoosh"},
+//	    {"normal","เพื่อน", "ช่างเหอะ ช่วงนี้ได้ยินเรื่องเพื่อนผู้หญิงห้องข้าง ๆ เราป้ะ","pop"},
+//	    {"smile","คเชน", "ทำไม ? มีไรหรอ ?","whoosh"},
+//	    {"normal","เพื่อน", "เธอก็เป็นเพื่อนรุ่นเดียวกับเรานี่แหละแถมน่ารักดีด้วย แต่ติดตรงที่เธอมีบางอย่างแปลก ๆ นี่สิ","pop"},
+//	    {"normal","คเชน", "บางอย่างแปลก ๆ ?","whoosh"},
+//	    {"normal","เพื่อน", "เธอน่ะ ห่อเนื้อวัว Thai Wagyu แบบ medium rare มากินที่โรงเรียนทุกวันเลย","pop"},
+//	    {"normal","เพื่อน", "ไม่อยากจะคิดเลยว่าทำไมเธอไม่กินซอยจุ๊กันนะ ของขึ้นชื่อบ้านเราแท้ ๆ เพราะอย่างงี้ไงเธอถึงไม่มีเพื่อนคบซักคนอะ","whoosh"},
+//	    {"smile","คเชน", "อ๋อ… จำได้ละ แต่กินเนื้อดิบ ๆ มันก็ไม่ดีนะเว้ย อย่างน้อยก็ควรทำเนื้อให้สุกก่อนกินสิ เธอทำถูกแล้วล่ะ ถือว่าเป็นการปลูกฝังค่านิยมดี ๆ ให้รุ่นน้องในรร. ด้วยไง","pop"},
+//	    {"normal","คเชน", "Dev เกมนี้คิดบทมาดีจริง ๆ","wow"},
+//	    {"normal","เพื่อน", "พูดถึงใครอะ ?","pop"},
+//	    {"normal","คเชน", "เอาเถอะ... แต่จริง ๆ ที่เธอไม่มีเพื่อนอาจจะเป็นเพราะมีแต่คนแบบนายอยู่ในโรงเรียนก็ได้นะ","whoosh"},
+//	    {"normal","เพื่อน", ":ArchettoLOOKATYOU: :ArchettoLOOKATYOU:","pop"},
+//	    {"normal","เพื่อน", "เชื่อครับไม่โม้... แต่ฉันได้ยินมาว่าเธอก็พยายามหาเพื่อนอยู่นะ แต่ไม่มีใครอยากคุยกับเธอสักคนเลย","whoosh"},
+//	    {"normal","เพื่อน", "มีแต่คนบอกว่าเวลาอยู่กับเธอแล้วมันไม่สบายใจ","pop"},
+//	    {"normal","เพื่อน", "ฉันก็รู้สึกคล้ายกัน ใครจะอยู่ก็อยู่ ข้าไม่อยู่แล้ว บรรยากาศรอบตัวเธอมันเหมือนเหตุการณ์ในหนังผีที่เราไปดูมาเมื่อตอนนั้นเลย","whoosh"},
+//	    {"normal","คเชน", "เพ้อเจ้อ ดูธี่หยดแล้วหลอน","wow"},
+//	    {"normal","คเชน", "ไปนั่งที่เถอะ อาจารย์เข้าห้องมาแล้ว","whoosh"}
+//	};
+	
+	private TextBase storyTexts = new TextBase("/resources/texts/Chapter1.txt");
+	
 	private int currentTextIndex = 0;
     private Timeline timeline;
     private ImageView friendImage;
@@ -64,7 +68,7 @@ public class Chapter1 {
         root.setAlignment(Pos.CENTER);
         
        
-        ImageView background = createImageView("/resources/classroomTest.jpg", 968, 486);
+        ImageView background = createImageView("/resources/background/classroomTest.jpg", 968, 486);
 
         TextFlow textBox = new TextFlow();
         textBox.setPadding(new Insets(10));
@@ -98,7 +102,7 @@ public class Chapter1 {
     
     private void playBackgroundMusic() {
         try {
-            URL resource = getClass().getResource("/resources/bgChap1.mp3");
+            URL resource = getClass().getResource("/resources/sound/bgChap1.mp3");
             if (resource != null) {
                 Media media = new Media(resource.toExternalForm());
                 backgroundMusic = new MediaPlayer(media);
@@ -112,11 +116,12 @@ public class Chapter1 {
             e.printStackTrace();
         }
     }
+    
     private void loadSoundEffect() {
     	 try {
-    	        URL whooshURL = getClass().getResource("/resources/whoosh.mp3");
-    	        URL popURL = getClass().getResource("/resources/pop.mp3");
-    	        URL wowURL = getClass().getResource("/resources/wow.mp3");
+    	        URL whooshURL = getClass().getResource("/resources/sound/whoosh.mp3");
+    	        URL popURL = getClass().getResource("/resources/sound/pop.mp3");
+    	        URL wowURL = getClass().getResource("/resources/sound/wow.mp3");
 
     	        if (whooshURL != null && popURL != null &&  wowURL != null) {
     	            effectPlayer = new MediaPlayer(new Media(whooshURL.toExternalForm()));
@@ -156,11 +161,11 @@ public class Chapter1 {
     		return;
     	}
     	
-    	if (currentTextIndex < storyTexts.length - 1) {
+    	if (currentTextIndex < storyTexts.getStoryTexts().size() - 1) {
             currentTextIndex++;
             textBox.getChildren().clear();
             updateSpeakerVisibility();
-            playEffectSound(storyTexts[currentTextIndex][3]); // เล่นเสียงเอฟเฟกต์
+            playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[3]); // เล่นเสียงเอฟเฟกต์
          // อัปเดตรูปภาพของตัวละครที่กำลังพูด
             updateCharacterImages();
             
@@ -172,8 +177,8 @@ public class Chapter1 {
         }
     }
     private void updateCharacterImages() {
-        String currentSpeaker = storyTexts[currentTextIndex][1];
-        String emotion = storyTexts[currentTextIndex][0];
+        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+        String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
 
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
@@ -183,10 +188,10 @@ public class Chapter1 {
     }
     private String getImagePath(String speaker, String emotion) {
         if (speaker.equals("คเชน")) {
-            if (emotion.equals("normal")) return "/resources/cashen_normal.png";
-            if (emotion.equals("smile")) return "/resources/cashen_smile.png";
+            if (emotion.equals("normal")) return "/resources/cashen/cashen_normal.png";
+            if (emotion.equals("smile")) return "/resources/cashen/cashen_smile.png";
         } else if (speaker.equals("เพื่อน")) {
-            return "/resources/friend_normal.png";
+            return "/resources/friend/friend_normal.png";
         }
         return "/resources/default.png"; // กรณีผิดพลาด ให้ใช้ภาพ default
     }
@@ -194,7 +199,7 @@ public class Chapter1 {
         if (effectPlayer != null) {
             effectPlayer.stop(); // หยุดเสียงเก่าก่อนเล่นใหม่
         }
-        String effectPath = "/resources/" + effect + ".mp3"; 
+        String effectPath = "/resources/sound/" + effect + ".mp3"; 
         
         URL effectURL = getClass().getResource(effectPath);
 
@@ -207,7 +212,7 @@ public class Chapter1 {
     }
    
     private void playTalkingSound() {
-    	String effectPath = "/resources/talking.mp3";
+    	String effectPath = "/resources/sound/talking.mp3";
     	
     	URL talkingURL = getClass().getResource(effectPath);
     	if (talkingURL != null) {
@@ -220,7 +225,7 @@ public class Chapter1 {
     }
     
     private ImageView createSpeakerImage(String speaker) {
-        String imagePath = (speaker.equals("คเชน") ? "/resources/cashen_normal.png" : "/resources/friend_normal.png");
+        String imagePath = (speaker.equals("คเชน") ? "/resources/cashen/cashen_normal.png" : "/resources/friend/friend_normal.png");
         ImageView  img;
         if( speaker.equals("เพื่อน")) {
         	img = createImageView(imagePath, 260, 300);
@@ -232,7 +237,7 @@ public class Chapter1 {
     }
 
     private void updateSpeakerVisibility() {
-        String currentSpeaker = storyTexts[currentTextIndex][1];
+        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setOpacity(1.0);
             friendImage.setOpacity(0.8);
@@ -243,8 +248,8 @@ public class Chapter1 {
     }
 
     private Timeline createTimeline(TextFlow textBox) {
-        String currentSpeaker = storyTexts[currentTextIndex][1];
-        String currentText = storyTexts[currentTextIndex][2];
+        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+        String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[2];
 
         Timeline timeline = new Timeline();
         textBox.getChildren().clear(); // เคลียร์ข้อความเก่าก่อนเริ่มใหม่
@@ -253,11 +258,11 @@ public class Chapter1 {
         Text speakerText = new Text(currentSpeaker + " \n");
         
         speakerText.setFill(Color.RED); // เปลี่ยนสีเป็นแดงให้ดูเด่น
-        speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 20));
+        speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 20));
         // ข้อความที่พิมพ์ทีละตัว
         Text contentText = new Text();
         
-        contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 18));
+        contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
         textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
         
         for (int i = 0; i < currentText.length(); i++) {
@@ -284,19 +289,19 @@ public class Chapter1 {
     	if (timeline.getStatus() == Animation.Status.RUNNING) {
     		timeline.stop();
     		
-    		String currentSpeaker = storyTexts[currentTextIndex][1];
-    		String currentText = storyTexts[currentTextIndex][2];
+    		String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+    		String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[2];
     		
     		textBox.getChildren().clear(); // เคลียร์ข้อความเก่าก่อนเริ่มใหม่
 
             // ทำให้ชื่อผู้พูดดูเด่น
             Text speakerText = new Text(currentSpeaker + " \n");
             speakerText.setFill(Color.RED);
-            speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 20));
+            speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 20));
             
             Text contentText = new Text(currentText);
             
-            contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 18));
+            contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
             textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
     		return true;
     	}

@@ -2,6 +2,7 @@ package main;
 
 import java.net.URL;
 
+import Util.TextBase;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -26,13 +27,15 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends Application {
-
-    private String[] storyTexts = {
-        "น้องมีฮัก ฮักมีหน่อย อย่าให้น้องคอย... คอยอยู่ทุกมื่อ    \nLet's Go!!!",
-        "มองมาตั้งนาน ส่องเบิ่งตั้งแต่เมื่อวานแล้ะ อ้ายมาแต่ใส เป็นจังได๋ถึงเป็นตาฮักจังซี่ล่ะ",
-        "ใจมันตึ๊กตึ๊ก มันคึกมันคักก็มันแพ้ นี่ไม่ได้การและ ต้องเริ่มปฏิบัติการให้รู้ตัวซะบ่",
-        "รีบเลย...    \nฟ่าวเลย...    \nบ่มีเวลามาเล่นตาเล่นหู จับไมค์เอื้อนเพลง ให้อ้ายได้รู้...",
-    };
+//    private String[][] dialog = {
+//    		{"", "น้องมีฮัก ฮักมีหน่อย อย่าให้น้องคอย... คอยอยู่ทุกมื่อ    \nLet's Go!!!", ""},
+//    		{"", "มองมาตั้งนาน ส่องเบิ่งตั้งแต่เมื่อวานแล้ะ อ้ายมาแต่ใส เป็นจังได๋ถึงเป็นตาฮักจังซี่ล่ะ", ""},
+//    		{"", "ใจมันตึ๊กตึ๊ก มันคึกมันคักก็มันแพ้ นี่ไม่ได้การและ ต้องเริ่มปฏิบัติการให้รู้ตัวซะบ่", ""},
+//    		{"", "รีบเลย...    \nฟ่าวเลย...    \nบ่มีเวลามาเล่นตาเล่นหู จับไมค์เอื้อนเพลง ให้อ้ายได้รู้...", ""},
+//    };
+    
+    private TextBase storyTexts = new TextBase("src/resources/texts/main.txt");
+    
     private int currentTextIndex = 0; 
     private Timeline timeline;
     private MediaPlayer effecttalking;
@@ -83,7 +86,7 @@ public class Main extends Application {
 
     private void showGameScene(Stage primaryStage) {
         VBox root = new VBox(10);
-        ImageView background = createImageView("/resources/classroomTest.jpg", 968, 486);
+        ImageView background = createImageView("/resources/background/classroomTest.jpg", 968, 486);
         TextArea textBox = createTextArea();
         Button nextButton = createButton("Next", "rgba(255, 0, 0, 0.7)", 16);
         
@@ -117,7 +120,7 @@ public class Main extends Application {
         textBox.setEditable(false);
         textBox.setWrapText(true);
         textBox.setPadding(new Insets(10));
-        textBox.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 18));
+        textBox.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
         textBox.setPrefHeight(162);
         return textBox;
     }
@@ -127,7 +130,7 @@ public class Main extends Application {
     		return;
     	}
     	
-    	if (currentTextIndex < storyTexts.length - 1) {
+    	if (currentTextIndex < storyTexts.getStoryTexts().size() - 1) {
             currentTextIndex++;
             textBox.clear();
             timeline.stop();
@@ -141,7 +144,7 @@ public class Main extends Application {
     }
 
     private Timeline createTimeline(TextArea textBox) {
-        String currentText = storyTexts[currentTextIndex];  // ข้อความที่จะแสดง
+        String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[2];  // ข้อความที่จะแสดง
         Timeline timeline = new Timeline();
         
         for (int i = 0; i < currentText.length(); i++) {
@@ -159,7 +162,7 @@ public class Main extends Application {
     	if (timeline.getStatus() == Animation.Status.RUNNING) {
     		timeline.stop();
     		
-    		String currentText = storyTexts[currentTextIndex];
+    		String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[2];
     		
     		textBox.setText(currentText);
     		return true;
@@ -168,7 +171,7 @@ public class Main extends Application {
     }
     
     private void playTalkingSound() {
-    	String effectPath = "/resources/talking.mp3";
+    	String effectPath = "/resources/sound/talking.mp3";
     	
     	URL talkingURL = getClass().getResource(effectPath);
     	if (talkingURL != null) {
