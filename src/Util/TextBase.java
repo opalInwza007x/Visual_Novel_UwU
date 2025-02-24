@@ -17,13 +17,11 @@ public class TextBase {
 				line = line.replace("\\n", "\n");
 				String[] splitTexts = line.split("\\$", 4);
 				
-				System.out.println(splitTexts.length);
 				texts.add(splitTexts);
 			}
 		}catch (Exception err) {
 			System.out.println("Error reading file: " + err.getMessage());
 		}
-		System.out.println(texts.size());
 	}
 	
 	public TextBase(ArrayList<String[]> texts) {
