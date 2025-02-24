@@ -1,5 +1,8 @@
 package main;
 
+import java.net.URL;
+
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -13,6 +16,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -29,6 +35,7 @@ public class Main extends Application {
     };
     private int currentTextIndex = 0; 
     private Timeline timeline;
+    private MediaPlayer effecttalking;
 
     @Override
     public void start(Stage primaryStage) {
@@ -116,7 +123,11 @@ public class Main extends Application {
     }
 
     private void handleNextText(Stage primaryStage, TextArea textBox) {
-        if (currentTextIndex < storyTexts.length - 1) {
+    	if(isRunning(textBox)) {
+    		return;
+    	}
+    	
+    	if (currentTextIndex < storyTexts.length - 1) {
             currentTextIndex++;
             textBox.clear();
             timeline.stop();
@@ -137,10 +148,36 @@ public class Main extends Application {
             final int index = i;  // ต้องใช้ตัวแปร final สำหรับ Lambda
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
                 textBox.appendText(String.valueOf(currentText.charAt(index)));
+                playTalkingSound();
             }));
         }
 
         return timeline;  // ไม่ต้อง setCycleCount เพราะจะหยุดเองเมื่อครบข้อความ
+    }
+    
+    private boolean isRunning(TextArea textBox) {
+    	if (timeline.getStatus() == Animation.Status.RUNNING) {
+    		timeline.stop();
+    		
+    		String currentText = storyTexts[currentTextIndex];
+    		
+    		textBox.setText(currentText);
+    		return true;
+    	}
+    	return false;
+    }
+    
+    private void playTalkingSound() {
+    	String effectPath = "/resources/talking.mp3";
+    	
+    	URL talkingURL = getClass().getResource(effectPath);
+    	if (talkingURL != null) {
+    		effecttalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
+    		effecttalking.setVolume(0.1);
+    		effecttalking.play();
+        } else {
+            System.out.println("Error: Effect sound file talking.mp3 not found!");
+        }
     }
 
     public static void main(String[] args) {

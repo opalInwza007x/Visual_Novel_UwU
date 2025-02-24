@@ -1,7 +1,6 @@
-
-
 package main;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
@@ -56,6 +55,7 @@ public class Chapter1 {
     private ImageView cashenImage;	
     private MediaPlayer backgroundMusic;
     private MediaPlayer effectPlayer;
+    private MediaPlayer effecttalking;
 
     public void startChapter(Stage primaryStage) {
     	playBackgroundMusic();
@@ -152,7 +152,11 @@ public class Chapter1 {
 
   
     private void handleNextText(Stage primaryStage, TextFlow textBox) {
-        if (currentTextIndex < storyTexts.length - 1) {
+    	if(isRunning(textBox)) {
+    		return;
+    	}
+    	
+    	if (currentTextIndex < storyTexts.length - 1) {
             currentTextIndex++;
             textBox.getChildren().clear();
             updateSpeakerVisibility();
@@ -192,7 +196,6 @@ public class Chapter1 {
         }
         String effectPath = "/resources/" + effect + ".mp3"; 
         
-        
         URL effectURL = getClass().getResource(effectPath);
 
         if (effectURL != null) {
@@ -203,7 +206,19 @@ public class Chapter1 {
         }
     }
    
-
+    private void playTalkingSound() {
+    	String effectPath = "/resources/talking.mp3";
+    	
+    	URL talkingURL = getClass().getResource(effectPath);
+    	if (talkingURL != null) {
+    		effecttalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
+    		effecttalking.setVolume(0.2);
+    		effecttalking.play();
+        } else {
+            System.out.println("Error: Effect sound file talking.mp3 not found!");
+        }
+    }
+    
     private ImageView createSpeakerImage(String speaker) {
         String imagePath = (speaker.equals("คเชน") ? "/resources/cashen_normal.png" : "/resources/friend_normal.png");
         ImageView  img;
@@ -249,6 +264,7 @@ public class Chapter1 {
             final int index = i;
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
                 contentText.setText(contentText.getText() + currentText.charAt(index)); // เพิ่มตัวอักษรทีละตัว
+                playTalkingSound();
             }));
         }
 
@@ -262,6 +278,29 @@ public class Chapter1 {
         StackPane nextSceneRoot = new StackPane();
         nextSceneRoot.setStyle("-fx-background-color: black;");
         primaryStage.setScene(new Scene(nextSceneRoot, 968, 648));
+    }
+    
+    private boolean isRunning(TextFlow textBox) {
+    	if (timeline.getStatus() == Animation.Status.RUNNING) {
+    		timeline.stop();
+    		
+    		String currentSpeaker = storyTexts[currentTextIndex][1];
+    		String currentText = storyTexts[currentTextIndex][2];
+    		
+    		textBox.getChildren().clear(); // เคลียร์ข้อความเก่าก่อนเริ่มใหม่
+
+            // ทำให้ชื่อผู้พูดดูเด่น
+            Text speakerText = new Text(currentSpeaker + " \n");
+            speakerText.setFill(Color.RED);
+            speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 20));
+            
+            Text contentText = new Text(currentText);
+            
+            contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/Prompt-ExtraLight.ttf"), 18));
+            textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
+    		return true;
+    	}
+    	return false;
     }
 }
 
