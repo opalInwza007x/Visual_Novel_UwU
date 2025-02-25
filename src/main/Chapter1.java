@@ -76,7 +76,7 @@ public class Chapter1 extends Chapter {
 	@Override
 	public void playBackgroundMusic() {
 		try {
-			URL resource = initialBackgroundMusic("/resources/sound/bgChap1.mp3"); 
+			URL resource = initialBackgroundMusic("/resources/sound/bgChap1.mp3");
 			if (resource != null) {
 				Media media = new Media(resource.toExternalForm());
 				backgroundMusic = new MediaPlayer(media);
@@ -90,7 +90,7 @@ public class Chapter1 extends Chapter {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void loadSoundEffect() {
 		try {
@@ -108,14 +108,14 @@ public class Chapter1 extends Chapter {
 		}
 	}
 
-	
 	@Override
 	public void createAnswerBoxFor2(Stage primaryStage, TextFlow textBox) {
 		Button answerButton1 = createButton("Yes!", "rgba(0, 128, 255, 0.8)", 18);
 		Button answerButton2 = createButton("No!", "rgba(0, 128, 255, 0.8)", 18);
 		VBox answerBox = new VBox(10);
 		answerButton1.setOnAction(event -> {
-			currentTextIndex += Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion1Index]);
+			currentTextIndex += Integer
+					.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion1Index]);
 
 			if (textBox != null) {
 				textBox.getChildren().clear();
@@ -126,7 +126,8 @@ public class Chapter1 extends Chapter {
 		});
 
 		answerButton2.setOnAction(event -> {
-			currentTextIndex += Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion2Index]);
+			currentTextIndex += Integer
+					.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion2Index]);
 
 			if (textBox != null) {
 				textBox.getChildren().clear();
@@ -146,7 +147,6 @@ public class Chapter1 extends Chapter {
 		stackPane.getChildren().add(answerBox);
 	}
 
-	
 	@Override
 	public void updateCharacterImages() {
 		String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
@@ -158,8 +158,7 @@ public class Chapter1 extends Chapter {
 			friendImage.setImage(new Image(getClass().getResource(getImagePath("เพื่อน", emotion)).toExternalForm()));
 		}
 	}
-	
-	
+
 	@Override
 	public ImageView createSpeakerImage(String speaker) {
 		String imagePath = (speaker.equals("คเชน") ? "/resources/cashen/cashen_normal.png"
@@ -174,7 +173,6 @@ public class Chapter1 extends Chapter {
 		return img;
 	}
 
-	
 	@Override
 	public void updateSpeakerVisibility() {
 		String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
@@ -186,13 +184,12 @@ public class Chapter1 extends Chapter {
 			friendImage.setOpacity(1.0);
 		}
 	}
-	
 
 	@Override
 	public URL initialBackgroundMusic(String url) {
 		return getClass().getResource(url);
 	}
-	
+
 	@Override
 	public void setStoryTexts(String url) {
 		storyTexts = new TextBase(url);

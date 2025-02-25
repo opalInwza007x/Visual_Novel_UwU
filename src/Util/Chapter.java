@@ -42,11 +42,11 @@ public abstract class Chapter implements HaveBackgroundMusic, haveText {
 	public abstract ImageView createSpeakerImage(String speaker);
 
 	public abstract void updateSpeakerVisibility();
-	
+
 	public abstract void createAnswerBoxFor2(Stage primaryStage, TextFlow textBox);
-	
+
 	public abstract void setStoryTexts(String url);
-	
+
 	@Override
 	public abstract void playBackgroundMusic();
 
@@ -87,6 +87,10 @@ public abstract class Chapter implements HaveBackgroundMusic, haveText {
 			return;
 		}
 
+		if (storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex].equals("ask2")) {
+			return;
+		}
+
 		if (currentTextIndex < storyTexts.getStoryTexts().size() - 1) {
 			currentTextIndex++;
 			textBox.getChildren().clear();
@@ -97,7 +101,7 @@ public abstract class Chapter implements HaveBackgroundMusic, haveText {
 			if (storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex].equals("ask2")) {
 				createAnswerBoxFor2(primaryStage, textBox);
 			}
-			
+
 			timeline.stop();
 			timeline = createTimeline(textBox);
 			timeline.play();
