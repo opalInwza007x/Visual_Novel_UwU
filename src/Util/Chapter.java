@@ -23,253 +23,173 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-public abstract class Chapter {
-	private TextBase storyTexts;
-	private int currentTextIndex = 0;
-	private Timeline timeline;
-	private ImageView friendImage;
-	private ImageView cashenImage;
-	private MediaPlayer backgroundMusic;
-	private MediaPlayer effectPlayer;
-	private MediaPlayer effecttalking;
+public abstract class Chapter implements HaveBackgroundMusic, haveText {
+	public TextBase storyTexts;
+	protected int currentTextIndex = 0;
+	protected Timeline timeline;
+	protected MediaPlayer backgroundMusic;
+	protected MediaPlayer effectPlayer;
+	protected MediaPlayer effecttalking;
 
-	public void startChapter(Stage primaryStage) {
-		playBackgroundMusic();
-		loadSoundEffect();
+	public abstract void startChapter(Stage primaryStage);
 
-		VBox root = new VBox(10);
-		root.setAlignment(Pos.CENTER);
+	public abstract URL initialBackgroundMusic(String url);
 
-		ImageView background = createImageView("/resources/background/classroomTest.jpg", 968, 486);
+	public abstract void loadSoundEffect();
 
-		TextFlow textBox = new TextFlow();
-		textBox.setPadding(new Insets(10));
-		textBox.setPrefHeight(162);
-		textBox.setStyle("-fx-background-color: white; -fx-border-color: black; -fx-padding: 10px;");
+	public abstract void updateCharacterImages();
 
-		Button nextButton = createButton("Next", "rgba(255, 0, 0, 0.7)", 16);
+	public abstract ImageView createSpeakerImage(String speaker);
 
-		friendImage = createSpeakerImage("เพื่อน");
-		cashenImage = createSpeakerImage("คเชน");
-
-		updateSpeakerVisibility();
-
-		nextButton.setOnAction(event -> handleNextText(primaryStage, textBox));
-
-		StackPane textBoxWithButton = new StackPane(textBox, nextButton);
-		StackPane.setAlignment(nextButton, Pos.BOTTOM_RIGHT);
-
-		HBox speakerPane = new HBox(50, friendImage, cashenImage);
-		speakerPane.setAlignment(Pos.BOTTOM_CENTER);
-
-		StackPane stackPane = new StackPane(background, speakerPane);
-
-		timeline = createTimeline(textBox);
-		timeline.play();
-
-		root.getChildren().addAll(stackPane, textBoxWithButton);
-
-		primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
-	}
-
-	private void playBackgroundMusic() {
-		try {
-			URL resource = getClass().getResource("/resources/sound/bgChap1.mp3");
-			if (resource != null) {
-				Media media = new Media(resource.toExternalForm());
-				backgroundMusic = new MediaPlayer(media);
-				backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE); // เล่นวนลูป
-				backgroundMusic.setVolume(0.5); // ตั้งค่าความดัง (0.0 - 1.0)
-				backgroundMusic.play();
-			} else {
-				System.out.println("Error: Background music file not found!");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	public abstract void updateSpeakerVisibility();
 	
-	public abstract URL initializeBackgroundMusic();
+	public abstract void createAnswerBoxFor2(Stage primaryStage, TextFlow textBox);
+	
+	public abstract void setStoryTexts(String url);
+	
+	@Override
+	public abstract void playBackgroundMusic();
 
-	private void loadSoundEffect() {
-		try {
-			URL whooshURL = getClass().getResource("/resources/sound/whoosh.mp3");
-			URL popURL = getClass().getResource("/resources/sound/pop.mp3");
-			URL wowURL = getClass().getResource("/resources/sound/wow.mp3");
-
-			if (whooshURL != null && popURL != null && wowURL != null) {
-				effectPlayer = new MediaPlayer(new Media(whooshURL.toExternalForm()));
-			} else {
-				System.out.println("Error: Effect sound files not found!");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private ImageView createImageView(String path, double width, double height) {
+	protected ImageView createImageView(String path, double width, double height) {
 		ImageView imageView = new ImageView(new Image(getClass().getResource(path).toExternalForm()));
 		imageView.setFitWidth(width);
 		imageView.setFitHeight(height);
 		return imageView;
 	}
-	
-	private Button createButton(String text, String color, int fontSize) {
-        Button button = new Button(text);
-        button.setStyle(String.format("-fx-background-color: %s; -fx-text-fill: white; -fx-font-size: %dpx;", color, fontSize));
-        return button;
-    }
-	
-	private void handleNextText(Stage primaryStage, TextFlow textBox) {
-    	if(isRunning()) {
-    		timeline.stop();
-    		
-    		String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
-    		String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[2];
-    		
-    		textBox.getChildren().clear(); // เคลียร์ข้อความเก่าก่อนเริ่มใหม่
 
-            // ทำให้ชื่อผู้พูดดูเด่น
-            Text speakerText = new Text(currentSpeaker + " \n");
-            speakerText.setFill(Color.RED);
-            speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 20));
-            
-            Text contentText = new Text(currentText);
-            
-            contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
-            textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
-    		return;
-    	}
-    	
-    	if (currentTextIndex < storyTexts.getStoryTexts().size() - 1) {
-            currentTextIndex++;
-            textBox.getChildren().clear();
-            updateSpeakerVisibility();
-            playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[3]); // เล่นเสียงเอฟเฟกต์
-         // อัปเดตรูปภาพของตัวละครที่กำลังพูด
-            updateCharacterImages();
-            
-            timeline.stop();
-            timeline = createTimeline(textBox);
-            timeline.play();
-        } else {
-            showNextScene(primaryStage);
-        }
-    }
-	
-	private void updateCharacterImages() {
-        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
-        String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
+	protected Button createButton(String text, String color, int fontSize) {
+		Button button = new Button(text);
+		button.setStyle(
+				String.format("-fx-background-color: %s; -fx-text-fill: white; -fx-font-size: %dpx;", color, fontSize));
+		return button;
+	}
 
-        if (currentSpeaker.equals("คเชน")) {
-            cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
-        } else {
-            friendImage.setImage(new Image(getClass().getResource(getImagePath("เพื่อน", emotion)).toExternalForm()));
-        }
-    }
-    private String getImagePath(String speaker, String emotion) {
-        if (speaker.equals("คเชน")) {
-            if (emotion.equals("normal")) return "/resources/cashen/cashen_normal.png";
-            if (emotion.equals("smile")) return "/resources/cashen/cashen_smile.png";
-        } else if (speaker.equals("เพื่อน")) {
-            return "/resources/friend/friend_normal.png";
-        }
-        return "/resources/default.png"; // กรณีผิดพลาด ให้ใช้ภาพ default
-    }
-    private void playEffectSound(String effect) {
-        if (effectPlayer != null) {
-            effectPlayer.stop(); // หยุดเสียงเก่าก่อนเล่นใหม่
-        }
-        String effectPath = "/resources/sound/" + effect + ".mp3"; 
-        
-        URL effectURL = getClass().getResource(effectPath);
+	public void handleNextText(Stage primaryStage, TextFlow textBox) {
+		if (isRunning()) {
+			timeline.stop();
 
-        if (effectURL != null) {
-            effectPlayer = new MediaPlayer(new Media(effectURL.toExternalForm()));
-            effectPlayer.play();
-        } else {
-            System.out.println("Error: Effect sound file " + effect + " not found!");
-        }
-    }
-   
-    private void playTalkingSound() {
-    	String effectPath = "/resources/sound/talking.mp3";
-    	
-    	URL talkingURL = getClass().getResource(effectPath);
-    	if (talkingURL != null) {
-    		effecttalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
-    		effecttalking.setVolume(0.2);
-    		effecttalking.play();
-        } else {
-            System.out.println("Error: Effect sound file talking.mp3 not found!");
-        }
-    }
-    
-    private ImageView createSpeakerImage(String speaker) {
-        String imagePath = (speaker.equals("คเชน") ? "/resources/cashen/cashen_normal.png" : "/resources/friend/friend_normal.png");
-        ImageView  img;
-        if( speaker.equals("เพื่อน")) {
-        	img = createImageView(imagePath, 260, 300);
-        }else {
-        	img = createImageView(imagePath, 200, 300);
-        }
-        
-        return img;
-    }
+			String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.speakerIndex];
+			String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.textIndex];
 
-    private void updateSpeakerVisibility() {
-        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
-        if (currentSpeaker.equals("คเชน")) {
-            cashenImage.setOpacity(1.0);
-            friendImage.setOpacity(0.8);
-        } else {
-            cashenImage.setOpacity(0.8);
-            friendImage.setOpacity(1.0);
-        }
-    }
+			textBox.getChildren().clear(); // เคลียร์ข้อความเก่าก่อนเริ่มใหม่
 
-    private Timeline createTimeline(TextFlow textBox) {
-        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
-        String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[2];
+			// ทำให้ชื่อผู้พูดดูเด่น
+			Text speakerText = new Text(currentSpeaker + " \n");
+			speakerText.setFill(Color.RED);
+			speakerText.setFont(
+					Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 20));
 
-        Timeline timeline = new Timeline();
-        textBox.getChildren().clear(); // เคลียร์ข้อความเก่าก่อนเริ่มใหม่
+			Text contentText = new Text(currentText);
 
-        // ทำให้ชื่อผู้พูดดูเด่น
-        Text speakerText = new Text(currentSpeaker + " \n");
-        
-        speakerText.setFill(Color.RED); // เปลี่ยนสีเป็นแดงให้ดูเด่น
-        speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 20));
-        // ข้อความที่พิมพ์ทีละตัว
-        Text contentText = new Text();
-        
-        contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
-        textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
-        
-        for (int i = 0; i < currentText.length(); i++) {
-            final int index = i;
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
-                contentText.setText(contentText.getText() + currentText.charAt(index)); // เพิ่มตัวอักษรทีละตัว
-                playTalkingSound();
-            }));
-        }
+			contentText.setFont(
+					Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
+			textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
+			return;
+		}
 
-        return timeline;
-    }
+		if (currentTextIndex < storyTexts.getStoryTexts().size() - 1) {
+			currentTextIndex++;
+			textBox.getChildren().clear();
+			updateSpeakerVisibility();
+			playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.soundEffectIndex]); // เล่นเสียงเอฟเฟกต์
+			// อัปเดตรูปภาพของตัวละครที่กำลังพูด
+			updateCharacterImages();
+			if (storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex].equals("ask2")) {
+				createAnswerBoxFor2(primaryStage, textBox);
+			}
+			
+			timeline.stop();
+			timeline = createTimeline(textBox);
+			timeline.play();
+		} else {
+			showNextScene(primaryStage);
+		}
+	}
 
-    private void showNextScene(Stage primaryStage) {
-    	 if (backgroundMusic != null) {
-    	        backgroundMusic.stop(); // หยุดเสียงก่อนเปลี่ยนฉาก
-    	    }
-        StackPane nextSceneRoot = new StackPane();
-        nextSceneRoot.setStyle("-fx-background-color: black;");
-        primaryStage.setScene(new Scene(nextSceneRoot, 968, 648));
-    }
-    
-    private boolean isRunning() {
-    	if (timeline.getStatus() == Animation.Status.RUNNING) {
-    		return true;
-    	}
-    	return false;
-    }
+	protected String getImagePath(String speaker, String emotion) {
+		if (speaker.equals("คเชน")) {
+			if (emotion.equals("normal"))
+				return "/resources/cashen/cashen_normal.png";
+			if (emotion.equals("smile"))
+				return "/resources/cashen/cashen_smile.png";
+		} else if (speaker.equals("เพื่อน")) {
+			return "/resources/friend/friend_normal.png";
+		}
+		return "/resources/default.png"; // กรณีผิดพลาด ให้ใช้ภาพ default
+	}
+
+	protected void playEffectSound(String effect) {
+		if (effectPlayer != null) {
+			effectPlayer.stop(); // หยุดเสียงเก่าก่อนเล่นใหม่
+		}
+
+		String effectPath = "/resources/sound/" + effect + ".mp3";
+
+		URL effectURL = getClass().getResource(effectPath);
+
+		if (effectURL != null) {
+			effectPlayer = new MediaPlayer(new Media(effectURL.toExternalForm()));
+			effectPlayer.play();
+		} else {
+			System.out.println("Error: Effect sound file " + effect + " not found!");
+		}
+	}
+
+	public void playTalkingSound(String talking) {
+		String effectPath = "/resources/sound/talking_" + talking + ".mp3";
+
+		URL talkingURL = getClass().getResource(effectPath);
+		if (talkingURL != null) {
+			effecttalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
+			effecttalking.setVolume(0.5);
+			effecttalking.play();
+		} else {
+			System.out.println("Error: Effect sound file talking.mp3 not found!");
+		}
+	}
+
+	public Timeline createTimeline(TextFlow textBox) {
+		String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.speakerIndex];
+		String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.textIndex];
+
+		Timeline timeline = new Timeline();
+		textBox.getChildren().clear(); // เคลียร์ข้อความเก่าก่อนเริ่มใหม่
+
+		// ทำให้ชื่อผู้พูดดูเด่น
+		Text speakerText = new Text(currentSpeaker + " \n");
+
+		speakerText.setFill(Color.RED); // เปลี่ยนสีเป็นแดงให้ดูเด่น
+		speakerText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 20));
+		// ข้อความที่พิมพ์ทีละตัว
+		Text contentText = new Text();
+
+		contentText.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18));
+		textBox.getChildren().addAll(speakerText, contentText); // ใส่ลงใน TextFlow
+
+		for (int i = 0; i < currentText.length(); i++) {
+			final int index = i;
+			timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
+				contentText.setText(contentText.getText() + currentText.charAt(index)); // เพิ่มตัวอักษรทีละตัว
+				playTalkingSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.talkingSoungIndex]);
+			}));
+		}
+
+		return timeline;
+	}
+
+	protected void showNextScene(Stage primaryStage) {
+		if (backgroundMusic != null) {
+			backgroundMusic.stop(); // หยุดเสียงก่อนเปลี่ยนฉาก
+		}
+		StackPane nextSceneRoot = new StackPane();
+		nextSceneRoot.setStyle("-fx-background-color: black;");
+		primaryStage.setScene(new Scene(nextSceneRoot, 968, 648));
+	}
+
+	public boolean isRunning() {
+		if (timeline.getStatus() == Animation.Status.RUNNING) {
+			return true;
+		}
+		return false;
+	}
 }

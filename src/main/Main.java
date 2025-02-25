@@ -55,7 +55,7 @@ public class Main extends Application {
         StackPane menuRoot = new StackPane();
         
         // Forest Background
-        ImageView forestBackground = createImageView("/resources/Dark_Forest.jpeg", 968, 648);
+        ImageView forestBackground = createImageView("/resources/background/Dark_Forest.jpeg", 968, 648);
         GaussianBlur blur = new GaussianBlur(3);
         forestBackground.setEffect(blur);
         
@@ -116,7 +116,7 @@ public class Main extends Application {
         leftContent.getChildren().addAll(gameTitle, description, menuButtons);
         
         // Right side content (Anime Girl)
-        ImageView animeGirl = createImageView("/resources/Arisa_shy3_dark.png", 450, 600);
+        ImageView animeGirl = createImageView("/resources/arisa/Arisa_shy3_dark.png", 450, 600);
         animeGirl.setPreserveRatio(true);
         
         // Add gradient overlay to right side for smooth transition
