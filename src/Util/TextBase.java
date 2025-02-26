@@ -15,8 +15,10 @@ public class TextBase {
 	public final static int talkingSoungIndex = 4;
 	public final static int readingStatusIndex = 5;
 	public final static int quesion1Index = 6;
-	public final static int quesion2Index = 7;
-	public final static int maxTextIndex = 8;
+	public final static int answer1Index = 7;
+	public final static int quesion2Index = 8;
+	public final static int answer2Index = 9;
+	public final static int maxTextIndex = 10;
 	
 	public TextBase() {}
 	
