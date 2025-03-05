@@ -1,47 +1,14 @@
 package main;
 
-<<<<<<< HEAD
-import java.net.URL;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-||||||| ee9025b
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-=======
+
 import java.net.URL;
 import javafx.animation.*;
->>>>>>> 7cc7c5ef677356b4b6d4b988e550492d35b88ee4
+
 import javafx.application.Application;
 import javafx.geometry.*;
 import javafx.scene.Scene;
-<<<<<<< HEAD
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaPlayer.Status;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-||||||| ee9025b
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-=======
+
 import javafx.scene.control.*;
 import javafx.scene.effect.*;
 import javafx.scene.image.*;
@@ -50,32 +17,13 @@ import javafx.scene.media.*;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.*;
->>>>>>> 7cc7c5ef677356b4b6d4b988e550492d35b88ee4
+
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends Application {
 
-<<<<<<< HEAD
-    private String[] storyTexts = {
-        "น้องมีฮัก ฮักมีหน่อย อย่าให้น้องคอย... คอยอยู่ทุกมื่อ    \nLet's Go!!!",
-        "มองมาตั้งนาน ส่องเบิ่งตั้งแต่เมื่อวานแล้ะ อ้ายมาแต่ใส เป็นจังได๋ถึงเป็นตาฮักจังซี่ล่ะ",
-        "ใจมันตึ๊กตึ๊ก มันคึกมันคักก็มันแพ้ นี่ไม่ได้การและ ต้องเริ่มปฏิบัติการให้รู้ตัวซะบ่",
-        "รีบเลย...    \nฟ่าวเลย...    \nบ่มีเวลามาเล่นตาเล่นหู จับไมค์เอื้อนเพลง ให้อ้ายได้รู้...",
-    };
-    private int currentTextIndex = 0; 
-    private Timeline timeline;
-    private MediaPlayer effecttalking;
-||||||| ee9025b
-    private String[] storyTexts = {
-        "น้องมีฮัก ฮักมีหน่อย อย่าให้น้องคอย... คอยอยู่ทุกมื่อ    \nLet's Go!!!",
-        "มองมาตั้งนาน ส่องเบิ่งตั้งแต่เมื่อวานแล้ะ อ้ายมาแต่ใส เป็นจังได๋ถึงเป็นตาฮักจังซี่ล่ะ",
-        "ใจมันตึ๊กตึ๊ก มันคึกมันคักก็มันแพ้ นี่ไม่ได้การและ ต้องเริ่มปฏิบัติการให้รู้ตัวซะบ่",
-        "รีบเลย...    \nฟ่าวเลย...    \nบ่มีเวลามาเล่นตาเล่นหู จับไมค์เอื้อนเพลง ให้อ้ายได้รู้...",
-    };
-    private int currentTextIndex = 0; 
-    private Timeline timeline;
-=======
+
 	private final String MENU_BUTTON_STYLE = """
 			-fx-background-color: rgba(255, 255, 255, 0.1);
 			-fx-text-fill: white;
@@ -88,7 +36,7 @@ public class Main extends Application {
 			-fx-font-weight: bold;
 			-fx-cursor: hand;
 			""";
->>>>>>> 7cc7c5ef677356b4b6d4b988e550492d35b88ee4
+
 
 	private final String MENU_BUTTON_HOVER_STYLE = """
 			-fx-background-color: rgba(255, 255, 255, 0.3);
@@ -163,108 +111,22 @@ public class Main extends Application {
 
 		menuButtons.getChildren().addAll(startButton, exitButton);
 
-<<<<<<< HEAD
-    private void handleNextText(Stage primaryStage, TextArea textBox) {
-    	if(isRunning(textBox)) {
-    		return;
-    	}
-    	
-    	if (currentTextIndex < storyTexts.length - 1) {
-            currentTextIndex++;
-            textBox.clear();
-            timeline.stop();
-            timeline = createTimeline(textBox);
-            timeline.play();
-        } 
-        else {
-        	showLoadingScene(primaryStage);
-            new Timeline(new KeyFrame(Duration.seconds(2), e -> new Chapter1().startChapter(primaryStage))).play();
-        }
-    }
-||||||| ee9025b
-    private void handleNextText(Stage primaryStage, TextArea textBox) {
-        if (currentTextIndex < storyTexts.length - 1) {
-            currentTextIndex++;
-            textBox.clear();
-            timeline.stop();
-            timeline = createTimeline(textBox);
-            timeline.play();
-        } 
-        else {
-        	showLoadingScene(primaryStage);
-            new Timeline(new KeyFrame(Duration.seconds(2), e -> new Chapter1().startChapter(primaryStage))).play();
-        }
-    }
-=======
+
 		// Add hover animations
 		addButtonAnimations(startButton);
 		addButtonAnimations(exitButton);
->>>>>>> 7cc7c5ef677356b4b6d4b988e550492d35b88ee4
 
-<<<<<<< HEAD
-    private Timeline createTimeline(TextArea textBox) {
-        String currentText = storyTexts[currentTextIndex];  // ข้อความที่จะแสดง
-        Timeline timeline = new Timeline();
-        
-        for (int i = 0; i < currentText.length(); i++) {
-            final int index = i;  // ต้องใช้ตัวแปร final สำหรับ Lambda
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
-                textBox.appendText(String.valueOf(currentText.charAt(index)));
-                playTalkingSound();
-            }));
-        }
-||||||| ee9025b
-    private Timeline createTimeline(TextArea textBox) {
-        String currentText = storyTexts[currentTextIndex];  // ข้อความที่จะแสดง
-        Timeline timeline = new Timeline();
-        
-        for (int i = 0; i < currentText.length(); i++) {
-            final int index = i;  // ต้องใช้ตัวแปร final สำหรับ Lambda
-            timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
-                textBox.appendText(String.valueOf(currentText.charAt(index)));
-            }));
-        }
-=======
+
+
 		// Button actions
 		startButton.setOnAction(e -> toNextChapter(primaryStage));
 		exitButton.setOnAction(e -> System.exit(0));
->>>>>>> 7cc7c5ef677356b4b6d4b988e550492d35b88ee4
 
-<<<<<<< HEAD
-        return timeline;  // ไม่ต้อง setCycleCount เพราะจะหยุดเองเมื่อครบข้อความ
-    }
-    
-    private boolean isRunning(TextArea textBox) {
-    	if (timeline.getStatus() == Animation.Status.RUNNING) {
-    		timeline.stop();
-    		
-    		String currentText = storyTexts[currentTextIndex];
-    		
-    		textBox.setText(currentText);
-    		return true;
-    	}
-    	return false;
-    }
-    
-    private void playTalkingSound() {
-    	String effectPath = "/resources/talking.mp3";
-    	
-    	URL talkingURL = getClass().getResource(effectPath);
-    	if (talkingURL != null) {
-    		effecttalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
-    		effecttalking.setVolume(0.1);
-    		effecttalking.play();
-        } else {
-            System.out.println("Error: Effect sound file talking.mp3 not found!");
-        }
-    }
-||||||| ee9025b
-        return timeline;  // ไม่ต้อง setCycleCount เพราะจะหยุดเองเมื่อครบข้อความ
-    }
-=======
+
+
 		// Add elements to left content
 		leftContent.getChildren().addAll(gameTitle, description, menuButtons);
->>>>>>> 7cc7c5ef677356b4b6d4b988e550492d35b88ee4
+
 
 		// Right side content (Anime Girl)
 		ImageView animeGirl = createImageView("/resources/arisa/Arisa_shy3_dark.png", 450, 600);

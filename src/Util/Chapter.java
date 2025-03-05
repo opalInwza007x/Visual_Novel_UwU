@@ -145,7 +145,7 @@ public abstract class Chapter implements HaveBackgroundMusic, haveText {
 		URL talkingURL = getClass().getResource(effectPath);
 		if (talkingURL != null) {
 			effecttalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
-			effecttalking.setVolume(0.5);
+			effecttalking.setVolume(0.05);
 			effecttalking.play();
 		} else {
 			System.out.println("Error: Effect sound file talking.mp3 not found!");
