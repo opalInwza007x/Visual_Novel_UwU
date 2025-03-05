@@ -81,7 +81,7 @@ public class Main extends Application {
 		leftContent.setMaxWidth(484); // Half of total width
 
 		// Game Title with custom style
-		Text gameTitle = new Text("ฝากดูแลผีปอบของนายด้วยนะ");
+		Text gameTitle = new Text("ดูแลผีปอบ\nของนายด้วยนะ");
 
 		gameTitle.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 64));
 		gameTitle.setStyle("""
@@ -92,7 +92,7 @@ public class Main extends Application {
 
 		// Description text
 		Text description = new Text(
-				"เมื่อเธอชวนไปกินส้มตำโจ๊ะก่อนเที่ยงคืน มันจะเป็นยังไงกันแน่... หรือว่าความร้อนแรงจะมาเต็มแบบดุดันไม่เกรงใจใคร!");
+				"เมื่อเธอชวนไปกินส้มตำโจะโจ๊ะก่อนเที่ยงคืน มันจะเป็นยังไงกันแน่... หรือว่าความร้อนแรงจะมาเต็มแบบดุดันไม่เกรงใจใคร!");
 		description.setFont(Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), 18)); // Correct font size for description
 		description.setStyle("""
 				-fx-fill: white;
