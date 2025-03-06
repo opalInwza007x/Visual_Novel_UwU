@@ -1,10 +1,17 @@
 package main;
 
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.ParallelTransition;
+import javafx.animation.PauseTransition;
+import javafx.animation.ScaleTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -36,26 +43,26 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import Util.Chapter;
 import Util.TextBase;
 
 public class Chapter2 extends Chapter {
-    private ImageView friendImage;
+    private ImageView arisaImage;
     private ImageView cashenImage;
-    private StackPane stackPane;
 
     @Override
     public void startChapter(Stage primaryStage) {
         playBackgroundMusic("/resources/sound/bgChap1.mp3");
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
-        setStoryTexts("src/resources/texts/Chapter1.txt");
+        setStoryTexts("src/resources/texts/Chapter2.txt");
 
         ImageView background = setupBackground("/resources/background/classroomTest.jpg");
         TextFlow textBox = createTextFlow();
         Button nextButton = createNextButton(primaryStage, textBox);
 
-        friendImage = createSpeakerImage("เพื่อน");
+        arisaImage = createSpeakerImage("อาริสา");
         cashenImage = createSpeakerImage("คเชน");
         updateSpeakerVisibility();
 
@@ -64,7 +71,7 @@ public class Chapter2 extends Chapter {
         StackPane textBoxWithButton = createTextBoxWithButton(textBoxStack, nextButton);
 
         // Speaker images container
-        HBox speakerPane = new HBox(80, friendImage, cashenImage);
+        HBox speakerPane = new HBox(80, cashenImage, arisaImage);
         speakerPane.setAlignment(Pos.BOTTOM_CENTER);
 
         stackPane = new StackPane(background, speakerPane);
@@ -78,8 +85,9 @@ public class Chapter2 extends Chapter {
         root.getChildren().addAll(stackPane, textBoxWithButton);
 
         // Setup scene directly
+        enterAnimation(root);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
-        primaryStage.setTitle("Visual Novel - Chapter 1");
+        primaryStage.setTitle("Visual Novel - Chapter 2");
     }
     
     @Override
@@ -99,7 +107,7 @@ public class Chapter2 extends Chapter {
                 height = 300;
                 break;
             case "อาริสา":
-                imagePath = "/resources/arisa/arisa_normal.png";
+                imagePath = "/resources/arisa/Arisa_shy3_darkMarkMark.png";
                 width = 220;
                 height = 310;
                 break;
@@ -120,79 +128,6 @@ public class Chapter2 extends Chapter {
     }
 
     @Override
-	public void createAnswerBoxFor2(Stage primaryStage, TextFlow textBox) {
-    	Button answerButton1 = createButton(
-	        storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.answer1Index], 
-	        "rgba(0, 128, 255, 0.8)", 
-	        18
-	    );
-	    Button answerButton2 = createButton(
-	        storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.answer2Index], 
-	        "rgba(0, 128, 255, 0.8)", 
-	        18
-	    );
-		
-		String buttonStyle = "-fx-background-radius: 30; -fx-text-fill: white; -fx-font-weight: bold; " +
-                "-fx-padding: 15 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 1);";
-        
-        answerButton1.setStyle(answerButton1.getStyle() + buttonStyle);
-        answerButton2.setStyle(answerButton2.getStyle() + buttonStyle);
-        
-		VBox answerBox = new VBox(10);
-		
-		// ใช้ VBox เพื่อวางปุ่มเรียงกันในแนวตั้ง
-		// 10 คือ spacing ระหว่างปุ่ม
-		answerBox.setAlignment(Pos.CENTER);
-	    answerBox.getChildren().addAll(answerButton1, answerButton2);
-	    answerBox.setPadding(new Insets(20));
-	    answerBox.setSpacing(20);
-
-		// วาง VBox ไว้ตรงกลาง StackPane
-	    Rectangle choiceBoxBg = new Rectangle(300, 150);
-        choiceBoxBg.setArcWidth(30);
-        choiceBoxBg.setArcHeight(30);
-        choiceBoxBg.setFill(Color.rgb(20, 20, 60, 0.8));
-        
-        // Add a glow effect to the choice box
-        DropShadow choiceBoxShadow = new DropShadow();
-        choiceBoxShadow.setColor(Color.CORNFLOWERBLUE);
-        choiceBoxShadow.setRadius(20);
-        choiceBoxShadow.setSpread(0.2);
-        choiceBoxBg.setEffect(choiceBoxShadow);
-        
-        // Stack the choice box on top of its background
-        StackPane choiceBoxStack = new StackPane(choiceBoxBg, answerBox);
-        
-		answerButton1.setOnAction(event -> {
-			currentTextIndex += Integer
-					.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion1Index]);
-
-			if (textBox != null) {
-				textBox.getChildren().clear();
-			}
-
-			handleNextText(primaryStage, textBox);
-			stackPane.getChildren().remove(choiceBoxStack);
-		});
-
-		answerButton2.setOnAction(event -> {
-			currentTextIndex += Integer
-					.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion2Index]);
-
-			if (textBox != null) {
-				textBox.getChildren().clear();
-			}
-
-			handleNextText(primaryStage, textBox);
-			stackPane.getChildren().remove(choiceBoxStack);
-		});
-
-        // Add the choice box to the main stack pane
-        StackPane.setAlignment(choiceBoxStack, Pos.CENTER);
-        stackPane.getChildren().add(choiceBoxStack);
-	}
-
-    @Override
     public void updateCharacterImages() {
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
         String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
@@ -200,7 +135,7 @@ public class Chapter2 extends Chapter {
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
         } else {
-            friendImage.setImage(new Image(getClass().getResource(getImagePath("เพื่อน", emotion)).toExternalForm()));
+            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", "shy3_darkMarkMark")).toExternalForm()));
         }
     }
 
@@ -211,10 +146,10 @@ public class Chapter2 extends Chapter {
         // Update speaker visibility without animations
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setOpacity(1.0);
-            friendImage.setOpacity(0.6);
+            arisaImage.setOpacity(0.6);
         } else {
             cashenImage.setOpacity(0.6);
-            friendImage.setOpacity(1.0);
+            arisaImage.setOpacity(1.0);
         }
     }
 
@@ -222,10 +157,42 @@ public class Chapter2 extends Chapter {
     public void setStoryTexts(String url) {
         storyTexts = new TextBase(url);
     }
+    
+    public void goToNextChapter(Stage primaryStage) {
+    	// exitAnimation(primaryStage);
+    	backgroundMusic.stop();
+    	
+    	Chapter2 chapter2 = new Chapter2();
+        chapter2.startChapter(primaryStage);
+    }
+    
+    public void enterAnimation(VBox root) {
+        // Fade in the background
+        FadeTransition backgroundFade = new FadeTransition(Duration.seconds(1.5), stackPane.getChildren().get(0));
 
-	@Override
-	protected void goToNextChapter(Stage primaryStage) {
-		// TODO Auto-generated method stub
-		
-	}
+        // Slide in speaker images from sides
+        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), arisaImage);
+        friendSlide.setFromX(-300);
+        friendSlide.setToX(0);
+        friendSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+
+        TranslateTransition cashenSlide = new TranslateTransition(Duration.seconds(1), cashenImage);
+        cashenSlide.setFromX(300);
+        cashenSlide.setToX(0);
+        cashenSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
+
+        // Parallel animation for simultaneous effects
+        ParallelTransition parallelTransition = new ParallelTransition(
+            backgroundFade, 
+            friendSlide, 
+            cashenSlide
+        );
+        
+        FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), root);
+        fadeIn.setFromValue(0);
+        fadeIn.setToValue(1);
+        
+        fadeIn.play();
+        parallelTransition.play();
+    }
 }
