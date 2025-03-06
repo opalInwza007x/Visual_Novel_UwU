@@ -49,7 +49,7 @@ import Util.Chapter;
 import Util.TextBase;
 
 public class Chapter1 extends Chapter {
-    private ImageView arisaImage;
+    private ImageView friendImage;
     private ImageView cashenImage;
 
     @Override
@@ -63,11 +63,11 @@ public class Chapter1 extends Chapter {
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
         setStoryTexts("src/resources/texts/Chapter1.txt");
 
-        ImageView background = setupBackground("/resources/background/classroomTest.jpg");
+        ImageView background = setupBackground("/resources/background/BackgroundChapter1.jpg");
         TextFlow textBox = createTextFlow();
         Button nextButton = createNextButton(primaryStage, textBox);
 
-        arisaImage = createSpeakerImage("อาริสา");
+        friendImage = createSpeakerImage("เพื่อน");
         cashenImage = createSpeakerImage("คเชน");
         updateSpeakerVisibility();
 
@@ -76,7 +76,7 @@ public class Chapter1 extends Chapter {
         StackPane textBoxWithButton = createTextBoxWithButton(textBoxStack, nextButton);
 
         // Speaker images container
-        HBox speakerPane = new HBox(80, cashenImage, arisaImage);
+        HBox speakerPane = new HBox(80, cashenImage, friendImage);
         speakerPane.setAlignment(Pos.BOTTOM_CENTER);
 
         stackPane = new StackPane(background, speakerPane);
@@ -140,7 +140,7 @@ public class Chapter1 extends Chapter {
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
         } else {
-            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", "shy3_darkMarkMark")).toExternalForm()));
+            friendImage.setImage(new Image(getClass().getResource(getImagePath("เพื่อน", emotion)).toExternalForm()));
         }
     }
 
@@ -151,10 +151,10 @@ public class Chapter1 extends Chapter {
         // Update speaker visibility without animations
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setOpacity(1.0);
-            arisaImage.setOpacity(0.6);
+            friendImage.setOpacity(0.6);
         } else {
             cashenImage.setOpacity(0.6);
-            arisaImage.setOpacity(1.0);
+            friendImage.setOpacity(1.0);
         }
     }
 
@@ -176,7 +176,7 @@ public class Chapter1 extends Chapter {
         FadeTransition backgroundFade = new FadeTransition(Duration.seconds(1.5), stackPane.getChildren().get(0));
 
         // Slide in speaker images from sides
-        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), arisaImage);
+        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), friendImage);
         friendSlide.setFromX(-300);
         friendSlide.setToX(0);
         friendSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);

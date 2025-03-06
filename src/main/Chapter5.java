@@ -49,8 +49,10 @@ import Util.Chapter;
 import Util.TextBase;
 
 public class Chapter5 extends Chapter {
-    private ImageView arisaImage;
+    
     private ImageView cashenImage;
+    private ImageView father_motherInLawImage;
+    
 
     @Override
     public void startChapter(Stage primaryStage) {
@@ -63,11 +65,11 @@ public class Chapter5 extends Chapter {
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
         setStoryTexts("src/resources/texts/Chapter5.txt");
 
-        ImageView background = setupBackground("/resources/background/classroomTest.jpg");
+        ImageView background = setupBackground("/resources/background/BackgroundChapter5.png");
         TextFlow textBox = createTextFlow();
         Button nextButton = createNextButton(primaryStage, textBox);
 
-        arisaImage = createSpeakerImage("อาริสา");
+        father_motherInLawImage = createSpeakerImage("พ่อตา");
         cashenImage = createSpeakerImage("คเชน");
         updateSpeakerVisibility();
 
@@ -76,7 +78,7 @@ public class Chapter5 extends Chapter {
         StackPane textBoxWithButton = createTextBoxWithButton(textBoxStack, nextButton);
 
         // Speaker images container
-        HBox speakerPane = new HBox(80, cashenImage, arisaImage);
+        HBox speakerPane = new HBox(80, father_motherInLawImage ,cashenImage);
         speakerPane.setAlignment(Pos.BOTTOM_CENTER);
 
         stackPane = new StackPane(background, speakerPane);
@@ -92,7 +94,7 @@ public class Chapter5 extends Chapter {
         // Setup scene directly
         enterAnimation(root);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
-        primaryStage.setTitle("Visual Novel - Chapter 2");
+        primaryStage.setTitle("Visual Novel - Chapter 5");
     }
     
     @Override
@@ -116,6 +118,12 @@ public class Chapter5 extends Chapter {
                 width = 220;
                 height = 310;
                 break;
+            case "พ่อตา":
+                imagePath = "/resources/fatherInLaw/father&motherInLaw_normal.png";
+                width = 220;
+                height = 310;
+                break;
+            
             default:
                 System.out.println("Unknown speaker: " + speaker);
                 return new ImageView(); // TODO Unknown speaker
@@ -139,8 +147,8 @@ public class Chapter5 extends Chapter {
 
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
-        } else {
-            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", "shy3_darkMarkMark")).toExternalForm()));
+        } else if(currentSpeaker.equals("พ่อตา") ||  currentSpeaker.equals("ชายคนแปลกหน้า") ) {
+        	father_motherInLawImage.setImage(new Image(getClass().getResource(getImagePath("พ่อตา", emotion)).toExternalForm()));
         }
     }
 
@@ -151,10 +159,10 @@ public class Chapter5 extends Chapter {
         // Update speaker visibility without animations
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setOpacity(1.0);
-            arisaImage.setOpacity(0.6);
+            father_motherInLawImage.setOpacity(0.6);
         } else {
             cashenImage.setOpacity(0.6);
-            arisaImage.setOpacity(1.0);
+            father_motherInLawImage.setOpacity(1.0);
         }
     }
 
@@ -176,7 +184,7 @@ public class Chapter5 extends Chapter {
         FadeTransition backgroundFade = new FadeTransition(Duration.seconds(1.5), stackPane.getChildren().get(0));
 
         // Slide in speaker images from sides
-        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), arisaImage);
+        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), father_motherInLawImage);
         friendSlide.setFromX(-300);
         friendSlide.setToX(0);
         friendSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);

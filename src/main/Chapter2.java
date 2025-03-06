@@ -63,7 +63,7 @@ public class Chapter2 extends Chapter {
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
         setStoryTexts("src/resources/texts/Chapter2.txt");
 
-        ImageView background = setupBackground("/resources/background/classroomTest.jpg");
+        ImageView background = setupBackground("/resources/background/BackgroundChapter2.png");
         TextFlow textBox = createTextFlow();
         Button nextButton = createNextButton(primaryStage, textBox);
 
@@ -113,8 +113,8 @@ public class Chapter2 extends Chapter {
                 break;
             case "อาริสา":
                 imagePath = "/resources/arisa/Arisa_shy3_darkMarkMark.png";
-                width = 220;
-                height = 310;
+                width = 240;
+                height = 290;
                 break;
             default:
                 System.out.println("Unknown speaker: " + speaker);
@@ -140,7 +140,7 @@ public class Chapter2 extends Chapter {
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
         } else {
-            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", "shy3_darkMarkMark")).toExternalForm()));
+            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", emotion)).toExternalForm()));
         }
     }
 

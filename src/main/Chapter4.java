@@ -63,7 +63,7 @@ public class Chapter4 extends Chapter {
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
         setStoryTexts("src/resources/texts/Chapter4.txt");
 
-        ImageView background = setupBackground("/resources/background/classroomTest.jpg");
+        ImageView background = setupBackground("/resources/background/BackgroundChapter4.jpg");
         TextFlow textBox = createTextFlow();
         Button nextButton = createNextButton(primaryStage, textBox);
 
@@ -92,7 +92,7 @@ public class Chapter4 extends Chapter {
         // Setup scene directly
         enterAnimation(root);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
-        primaryStage.setTitle("Visual Novel - Chapter 2");
+        primaryStage.setTitle("Visual Novel - Chapter 4");
     }
     
     @Override

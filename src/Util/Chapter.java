@@ -167,24 +167,6 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
 
         // Advance text index
         if (fromAnswerBox == 0) {
-<<<<<<< HEAD
-            if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
-                currentTextIndex++;
-            }
-        } else {
-            currentTextIndex += fromAnswerBox;
-        }
-
-||||||| d4ea5d6
-        	if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
-        		currentTextIndex++;
-        	}
-        }
-        else {
-        	currentTextIndex += fromAnswerBox;
-        }
-        
-=======
             if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
                 currentTextIndex++;
             }
@@ -192,58 +174,23 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             currentTextIndex += fromAnswerBox;
         }
         
->>>>>>> 8d637ea553967ccf80bd93e8272ca2705f451adb
         if (currentTextIndex < storyTexts.getStoryTexts().size()) {
-            // สต๊อปเสียงเอฟเฟกต์เก่า
-            if (effectTalking != null && effectTalking.getStatus() == MediaPlayer.Status.PLAYING) {
-                effectTalking.stop();
-            }
-
             updateSpeakerVisibility();
             playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.soundEffectIndex]);
             updateCharacterImages();
-
+            
             if ("ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
                 createAnswerBoxFor2(primaryStage, textBox);
             }
-<<<<<<< HEAD
-
-            // ตรวจสอบว่า timeline ถูกหยุดแล้วและสร้าง timeline ใหม่
-            if (timeline.getStatus() == Animation.Status.RUNNING) {
-                timeline.stop();  // หยุด timeline เก่า
-            }
-
-            // สร้าง timeline ใหม่
-||||||| d4ea5d6
-            timeline.stop();
-=======
             
             timeline.stop();
->>>>>>> 8d637ea553967ccf80bd93e8272ca2705f451adb
             timeline = createTimeline(textBox);
-<<<<<<< HEAD
-            timeline.play();  // เริ่มต้น timeline ใหม่
-
-        } else {
-            goToNextChapter(primaryStage);  // หากไม่มีข้อความให้แสดงไปยังบทถัดไป
-||||||| d4ea5d6
-            timeline.play();
-        } 
-        else {
-        	goToNextChapter(primaryStage);
-=======
             timeline.play();
         } else {
             goToNextChapter(primaryStage);
->>>>>>> 8d637ea553967ccf80bd93e8272ca2705f451adb
         }
     }
 
-<<<<<<< HEAD
-
-
-||||||| d4ea5d6
-=======
     private void initializeTextNodes() {
         speakerFont = loadFont(20);
         contentFont = loadFont(18);
@@ -269,58 +216,56 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         textBox.getChildren().setAll(speakerTextNode, contentTextNode);
     }
 
->>>>>>> 8d637ea553967ccf80bd93e8272ca2705f451adb
 	protected String getImagePath(String speaker, String emotion) {
         switch (speaker) {
             case "คเชน": return "/resources/cashen/cashen_" + emotion + ".png";
             case "เพื่อน": return "/resources/friend/friend_" + emotion + ".png";
             case "อาริสา": return "/resources/arisa/arisa_" + emotion + ".png";
+            case "ชายแปลกหน้า": return "/resources/fatherInLaw/fatherInLaw_" + emotion + ".png";
+            case "พ่อตา": return "/resources/fatherInLaw/father&motherInLaw_" + emotion + ".png";
+            case "แม่ยาย": return "/resources/fatherInLaw/father&motherInLaw_" + emotion + ".png";
             default: return "/resources/default.png";
         }
     }
 
-	protected void playEffectSound(String effect) {
-	    if (effectPlayer != null && effectPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
-	        effectPlayer.stop();  // หยุดเสียงเอฟเฟกต์เก่า
-	    }
-	    
-	    URL effectURL = getClass().getResource("/resources/sound/" + effect + ".mp3");
-	    if (effectURL != null) {
-	        effectPlayer = new MediaPlayer(new Media(effectURL.toExternalForm()));
-	        effectPlayer.play();
-	    } else {
-	        System.out.println("Error: Effect sound file " + effect + " not found!");
-	    }
-	}
+    protected void playEffectSound(String effect) {
+        if (effectPlayer != null) effectPlayer.stop();
+        URL effectURL = getClass().getResource("/resources/sound/" + effect + ".mp3");
+        if (effectURL != null) {
+            effectPlayer = new MediaPlayer(new Media(effectURL.toExternalForm()));
+            effectPlayer.play();
+        } else {
+            System.out.println("Error: Effect sound file " + effect + " not found!");
+        }
+    }
 
-
-	public void playTalkingSound(String talking) {
-	    if (effectTalking == null || !effectTalking.getMedia().getSource().contains(talking)) {
-	        URL talkingURL = getClass().getResource("/resources/sound/talking_" + talking + ".mp3");
-	        if (talkingURL != null) {
-	            effectTalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
-	            effectTalking.setVolume(0.5);
-	        } else {
-	            System.out.println("Error: Talking sound file not found!");
-	            return;
-	        }
-	    }
-	    
-	    if (effectTalking.getStatus() != MediaPlayer.Status.PLAYING) {
-	        effectTalking.play();  // เล่นเสียงใหม่
-	    }
-	}
+    public void playTalkingSound(String talking) {
+        if (effectTalking == null || !effectTalking.getMedia().getSource().contains(talking)) {
+            URL talkingURL = getClass().getResource("/resources/sound/talking_" + talking + ".mp3");
+            if (talkingURL != null) {
+                effectTalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
+                effectTalking.setVolume(0.5);
+            } else {
+                System.out.println("Error: Talking sound file not found!");
+                return;
+            }
+        }
+        
+        if (effectTalking.getStatus() != MediaPlayer.Status.PLAYING) {
+            effectTalking.play();
+        }
+    }
     
     private Font loadFont(int size) {
         return Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), size);
     }
 
     public Timeline createTimeline(TextFlow textBox) {
-        if (speakerFont == null || contentFont == null) {
-            speakerFont = loadFont(20);
-            contentFont = loadFont(18);
+    	if (speakerFont == null || contentFont == null) {
+    		speakerFont = loadFont(20);
+    	    contentFont = loadFont(18);
         }
-
+    	
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.speakerIndex];
         String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.textIndex];
 
@@ -333,26 +278,18 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         contentText.setFont(contentFont);
         textBox.getChildren().addAll(speakerText, contentText);
 
-        if (timeline.getStatus() == Animation.Status.RUNNING) {
-            timeline.stop();  // หยุด timeline เก่า
-        }
-
-        timeline = new Timeline();
-        StringBuilder displayedText = new StringBuilder();
+        Timeline timeline = new Timeline();
         for (int i = 0; i < currentText.length(); i++) {
             final int index = i;
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
-                displayedText.append(currentText.charAt(index));
-                contentText.setText(displayedText.toString()); // อัพเดตข้อความทีละตัวอักษร
-                if (index % 4 == 0 && (effectTalking == null || effectTalking.getStatus() != MediaPlayer.Status.PLAYING)) {
-                    playTalkingSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.talkingSoungIndex]);
+                contentText.setText(contentText.getText() + currentText.charAt(index));
+                if (index % 4 == 0) {
+                	playTalkingSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.talkingSoungIndex]);
                 }
             }));
         }
-
-        return timeline;  // คืนค่า timeline ใหม่
+        return timeline;
     }
-
 
     protected void showNextScene(Stage primaryStage) {
         if (backgroundMusic != null) backgroundMusic.stop();

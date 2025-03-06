@@ -51,6 +51,7 @@ import Util.TextBase;
 public class Chapter3 extends Chapter {
     private ImageView arisaImage;
     private ImageView cashenImage;
+    private ImageView strangeUncleImage;
 
     @Override
     public void startChapter(Stage primaryStage) {
@@ -63,12 +64,13 @@ public class Chapter3 extends Chapter {
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
         setStoryTexts("src/resources/texts/Chapter3.txt");
 
-        ImageView background = setupBackground("/resources/background/classroomTest.jpg");
+        ImageView background = setupBackground("/resources/background/BackgroundChapter3.jpg");
         TextFlow textBox = createTextFlow();
         Button nextButton = createNextButton(primaryStage, textBox);
 
         arisaImage = createSpeakerImage("อาริสา");
         cashenImage = createSpeakerImage("คเชน");
+        strangeUncleImage = createSpeakerImage("ลุงคนแปลกหน้า");
         updateSpeakerVisibility();
 
         // Stack text box background and text
@@ -76,7 +78,7 @@ public class Chapter3 extends Chapter {
         StackPane textBoxWithButton = createTextBoxWithButton(textBoxStack, nextButton);
 
         // Speaker images container
-        HBox speakerPane = new HBox(80, cashenImage, arisaImage);
+        HBox speakerPane = new HBox(80,strangeUncleImage, cashenImage, arisaImage);
         speakerPane.setAlignment(Pos.BOTTOM_CENTER);
 
         stackPane = new StackPane(background, speakerPane);
@@ -92,7 +94,7 @@ public class Chapter3 extends Chapter {
         // Setup scene directly
         enterAnimation(root);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
-        primaryStage.setTitle("Visual Novel - Chapter 2");
+        primaryStage.setTitle("Visual Novel - Chapter 3");
     }
     
     @Override
@@ -112,9 +114,14 @@ public class Chapter3 extends Chapter {
                 height = 300;
                 break;
             case "อาริสา":
-                imagePath = "/resources/arisa/Arisa_shy3_darkMarkMark.png";
-                width = 220;
-                height = 310;
+                imagePath = "/resources/arisa/Arisa_smile.png";
+                width = 230;
+                height = 290;
+                break;
+            case "ลุงคนแปลกหน้า":
+                imagePath = "/resources/strangeUncle/strangeUncle.png";
+                width = 390;
+                height = 300;
                 break;
             default:
                 System.out.println("Unknown speaker: " + speaker);
@@ -139,8 +146,8 @@ public class Chapter3 extends Chapter {
 
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
-        } else {
-            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", "shy3_darkMarkMark")).toExternalForm()));
+        } else if(currentSpeaker.equals("อาริสา")) {
+            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", emotion)).toExternalForm()));
         }
     }
 
