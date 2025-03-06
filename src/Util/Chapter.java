@@ -198,13 +198,19 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
     }
 
     public void playTalkingSound(String talking) {
-        URL talkingURL = getClass().getResource("/resources/sound/talking_" + talking + ".mp3");
-        if (talkingURL != null) {
-            effectTalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
-            effectTalking.setVolume(0.5);
+        if (effectTalking == null || !effectTalking.getMedia().getSource().contains(talking)) {
+            URL talkingURL = getClass().getResource("/resources/sound/talking_" + talking + ".mp3");
+            if (talkingURL != null) {
+                effectTalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
+                effectTalking.setVolume(0.5);
+            } else {
+                System.out.println("Error: Talking sound file not found!");
+                return;
+            }
+        }
+        
+        if (effectTalking.getStatus() != MediaPlayer.Status.PLAYING) {
             effectTalking.play();
-        } else {
-            System.out.println("Error: Talking sound file not found!");
         }
     }
 
@@ -226,7 +232,8 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             final int index = i;
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
                 contentText.setText(contentText.getText() + currentText.charAt(index));
-                // playTalkingSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.talkingSoungIndex]);
+                if(index % 3 == 0)
+                	playTalkingSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.talkingSoungIndex]);
             }));
         }
         return timeline;
