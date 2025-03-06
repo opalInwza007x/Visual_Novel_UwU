@@ -48,7 +48,7 @@ import java.util.Optional;
 import Util.Chapter;
 import Util.TextBase;
 
-public class Chapter5 extends Chapter {
+public class Chapter4 extends Chapter {
     private ImageView arisaImage;
     private ImageView cashenImage;
 
@@ -61,7 +61,7 @@ public class Chapter5 extends Chapter {
 	protected void stateSetup(Stage primaryStage) {
     	playBackgroundMusic("/resources/sound/bgChap1.mp3");
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
-        setStoryTexts("src/resources/texts/Chapter5.txt");
+        setStoryTexts("src/resources/texts/Chapter4.txt");
 
         ImageView background = setupBackground("/resources/background/classroomTest.jpg");
         TextFlow textBox = createTextFlow();
