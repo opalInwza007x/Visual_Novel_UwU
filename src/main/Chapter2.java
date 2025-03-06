@@ -1,14 +1,8 @@
 package main;
 
 import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
-import javafx.animation.ParallelTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.ScaleTransition;
-import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -46,7 +40,7 @@ import java.util.List;
 import Util.Chapter;
 import Util.TextBase;
 
-public class Chapter1 extends Chapter {
+public class Chapter2 extends Chapter {
     private ImageView friendImage;
     private ImageView cashenImage;
     private StackPane stackPane;
@@ -84,7 +78,6 @@ public class Chapter1 extends Chapter {
         root.getChildren().addAll(stackPane, textBoxWithButton);
 
         // Setup scene directly
-        enterAnimation(root);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
         primaryStage.setTitle("Visual Novel - Chapter 1");
     }
@@ -229,42 +222,10 @@ public class Chapter1 extends Chapter {
     public void setStoryTexts(String url) {
         storyTexts = new TextBase(url);
     }
-    
-    public void goToNextChapter(Stage primaryStage) {
-    	// exitAnimation(primaryStage);
-    	backgroundMusic.stop();
-    	
-    	Chapter2 chapter2 = new Chapter2();
-        chapter2.startChapter(primaryStage);
-    }
-    
-    public void enterAnimation(VBox root) {
-        // Fade in the background
-        FadeTransition backgroundFade = new FadeTransition(Duration.seconds(1.5), stackPane.getChildren().get(0));
 
-        // Slide in speaker images from sides
-        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), friendImage);
-        friendSlide.setFromX(-300);
-        friendSlide.setToX(0);
-        friendSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-
-        TranslateTransition cashenSlide = new TranslateTransition(Duration.seconds(1), cashenImage);
-        cashenSlide.setFromX(300);
-        cashenSlide.setToX(0);
-        cashenSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-
-        // Parallel animation for simultaneous effects
-        ParallelTransition parallelTransition = new ParallelTransition(
-            backgroundFade, 
-            friendSlide, 
-            cashenSlide
-        );
-        
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), root);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        
-        fadeIn.play();
-        parallelTransition.play();
-    }
+	@Override
+	protected void goToNextChapter(Stage primaryStage) {
+		// TODO Auto-generated method stub
+		
+	}
 }
