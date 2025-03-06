@@ -163,6 +163,7 @@ public class Chapter1 extends Chapter {
         storyTexts = new TextBase(url);
     }
     
+    @Override
     public void goToNextChapter(Stage primaryStage) {
     	// exitAnimation(primaryStage);
     	backgroundMusic.stop();

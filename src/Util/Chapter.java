@@ -35,19 +35,19 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
     protected Timeline timeline = new Timeline();
     protected MediaPlayer backgroundMusic, effectPlayer, effectTalking;
     protected StackPane stackPane;
-    private StackPane choiceBoxStack = null;
+    protected StackPane choiceBoxStack = null;
     private Font speakerFont;
     private Font contentFont;
     private Text speakerTextNode;
     private Text contentTextNode;
 
     protected abstract void startChapter(Stage primaryStage);
+    protected abstract void stateSetup(Stage primaryStage);
     protected abstract void updateCharacterImages();
     protected abstract ImageView createSpeakerImage(String speaker);
     protected abstract void updateSpeakerVisibility();
     protected abstract void setStoryTexts(String url);
     protected abstract void goToNextChapter(Stage primaryStage);
-    protected abstract void stateSetup(Stage primaryStage);
     
     @Override
     public void playBackgroundMusic(String url) {
@@ -156,6 +156,7 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         return textBoxBg;
     }
 
+    @Override
     public void handleNextText(Stage primaryStage, TextFlow textBox, int fromAnswerBox) {
         // If animation is running and user clicks Next, just show full text immediately
         if (fromAnswerBox == 0 && isRunning()) {
@@ -170,7 +171,8 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
                 currentTextIndex++;
             }
-        } else {
+        } 
+        else {
             currentTextIndex += fromAnswerBox;
         }
         
@@ -203,7 +205,7 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         contentTextNode.setFont(contentFont);
     }
 
-    private void updateTextBoxInstantly(TextFlow textBox) {
+    protected void updateTextBoxInstantly(TextFlow textBox) {
         if (speakerTextNode == null) {
             initializeTextNodes();
         }
@@ -238,7 +240,8 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             System.out.println("Error: Effect sound file " + effect + " not found!");
         }
     }
-
+    
+    @Override
     public void playTalkingSound(String talking) {
         if (effectTalking == null || !effectTalking.getMedia().getSource().contains(talking)) {
             URL talkingURL = getClass().getResource("/resources/sound/talking_" + talking + ".mp3");
@@ -295,7 +298,8 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         if (backgroundMusic != null) backgroundMusic.stop();
         primaryStage.setScene(new Scene(new StackPane(), 968, 648));
     }
-
+    
+    @Override
     public boolean isRunning() {
         return (timeline.getStatus() == Animation.Status.RUNNING);
     }
