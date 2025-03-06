@@ -15,6 +15,7 @@ import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -33,12 +34,15 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
     protected int currentTextIndex = 0;
     protected Timeline timeline = new Timeline();
     protected MediaPlayer backgroundMusic, effectPlayer, effectTalking;
+    protected StackPane stackPane;
+    private StackPane choiceBoxStack = null;
+    private Font speakerFont;
+    private Font contentFont;
 
     protected abstract void startChapter(Stage primaryStage);
     protected abstract void updateCharacterImages();
     protected abstract ImageView createSpeakerImage(String speaker);
     protected abstract void updateSpeakerVisibility();
-    protected abstract void createAnswerBoxFor2(Stage primaryStage, TextFlow textBox);
     protected abstract void setStoryTexts(String url);
     protected abstract void goToNextChapter(Stage primaryStage);
     
@@ -129,7 +133,7 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         nextButton.setStyle(nextButton.getStyle() + 
             "; -fx-background-radius: 25; -fx-text-fill: white; -fx-font-weight: bold; " +
             "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 1);");
-        nextButton.setOnAction(event -> handleNextText(primaryStage, textBox));
+        nextButton.setOnAction(event -> handleNextText(primaryStage, textBox, 0));
         return nextButton;
     }
     
@@ -149,18 +153,23 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         return textBoxBg;
     }
 
-    public void handleNextText(Stage primaryStage, TextFlow textBox) {
-        if (isRunning()) {
+    public void handleNextText(Stage primaryStage, TextFlow textBox, int fromAnswerBox) {
+        if (fromAnswerBox == 0 && isRunning()) {
             timeline.stop();
             updateTextBox(textBox);
             return;
         }
 
-        if ("ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
-            return;
+        if (fromAnswerBox == 0) {
+        	if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+        		currentTextIndex++;
+        	}
         }
-
-        if (++currentTextIndex < storyTexts.getStoryTexts().size()) {
+        else {
+        	currentTextIndex += fromAnswerBox;
+        }
+        
+        if (currentTextIndex < storyTexts.getStoryTexts().size()) {
             updateSpeakerVisibility();
             playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.soundEffectIndex]);
             updateCharacterImages();
@@ -213,18 +222,27 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             effectTalking.play();
         }
     }
+    
+    private Font loadFont(int size) {
+        return Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), size);
+    }
 
     public Timeline createTimeline(TextFlow textBox) {
+    	if (speakerFont == null || contentFont == null) {
+    		speakerFont = loadFont(20);
+    	    contentFont = loadFont(18);
+        }
+    	
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.speakerIndex];
         String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.textIndex];
 
         textBox.getChildren().clear();
         Text speakerText = new Text(currentSpeaker + "\n");
         speakerText.setFill(Color.RED);
-        speakerText.setFont(loadFont(20));
+        speakerText.setFont(speakerFont);
 
         Text contentText = new Text();
-        contentText.setFont(loadFont(18));
+        contentText.setFont(contentFont);
         textBox.getChildren().addAll(speakerText, contentText);
 
         Timeline timeline = new Timeline();
@@ -232,15 +250,12 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             final int index = i;
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
                 contentText.setText(contentText.getText() + currentText.charAt(index));
-                if(index % 3 == 0)
+                if (index % 4 == 0) {
                 	playTalkingSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.talkingSoungIndex]);
+                }
             }));
         }
         return timeline;
-    }
-
-    private Font loadFont(int size) {
-        return Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), size);
     }
 
     protected void showNextScene(Stage primaryStage) {
@@ -253,6 +268,11 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
     }
 
     private void updateTextBox(TextFlow textBox) {
+    	if (speakerFont == null || contentFont == null) {
+    		speakerFont = loadFont(20);
+    	    contentFont = loadFont(18);
+        }
+    	
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.speakerIndex];
         String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.textIndex];
         
@@ -260,11 +280,90 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         
         Text speakerText = new Text(currentSpeaker + " \n");
         speakerText.setFill(Color.RED);
-        speakerText.setFont(loadFont(20));
+        speakerText.setFont(speakerFont);
         
         Text contentText = new Text(currentText);
-        contentText.setFont(loadFont(18));
+        contentText.setFont(contentFont);
         
         textBox.getChildren().addAll(speakerText, contentText);
+    }
+
+    private boolean isAnswerBoxVisible() {
+        return choiceBoxStack != null && stackPane.getChildren().contains(choiceBoxStack);
+    }
+
+    public void createAnswerBoxFor2(Stage primaryStage, TextFlow textBox) {
+        // Remove existing answer box if it exists
+        if (choiceBoxStack != null && stackPane.getChildren().contains(choiceBoxStack)) {
+            stackPane.getChildren().remove(choiceBoxStack);
+        }
+        
+        Button answerButton1 = createButton(
+            storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.answer1Index],
+            "rgba(0, 128, 255, 0.8)",
+            18
+        );
+        
+        Button answerButton2 = createButton(
+            storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.answer2Index],
+            "rgba(0, 128, 255, 0.8)",
+            18
+        );
+
+        String buttonStyle = "-fx-background-radius: 30; -fx-text-fill: white; -fx-font-weight: bold; " +
+                             "-fx-padding: 15 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 1);";
+
+        answerButton1.setStyle(answerButton1.getStyle() + buttonStyle);
+        answerButton2.setStyle(answerButton2.getStyle() + buttonStyle);
+
+        VBox answerBox = new VBox(10);
+
+        // Set up vertical box for buttons
+        answerBox.setAlignment(Pos.CENTER);
+        answerBox.getChildren().addAll(answerButton1, answerButton2);
+        answerBox.setPadding(new Insets(20));
+        answerBox.setSpacing(20);
+
+        // Create background for choice box
+        Rectangle choiceBoxBg = new Rectangle(300, 150);
+        choiceBoxBg.setArcWidth(30);
+        choiceBoxBg.setArcHeight(30);
+        choiceBoxBg.setFill(Color.rgb(20, 20, 60, 0.8));
+
+        // Add glow effect to the choice box
+        DropShadow choiceBoxShadow = new DropShadow();
+        choiceBoxShadow.setColor(Color.CORNFLOWERBLUE);
+        choiceBoxShadow.setRadius(20);
+        choiceBoxShadow.setSpread(0.2);
+        choiceBoxBg.setEffect(choiceBoxShadow);
+
+        // Stack the choice box elements
+        choiceBoxStack = new StackPane(choiceBoxBg, answerBox);
+
+        StackPane.setAlignment(choiceBoxStack, Pos.CENTER);
+        stackPane.getChildren().add(choiceBoxStack);
+
+        // Set up button actions
+        answerButton1.setOnAction(event -> {
+            if (textBox != null) {
+                textBox.getChildren().clear();
+            }
+
+            stackPane.getChildren().remove(choiceBoxStack);
+            choiceBoxStack = null; // Clear the reference
+            
+            handleNextText(primaryStage, textBox, Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion1Index]));
+        });
+
+        answerButton2.setOnAction(event -> {
+            if (textBox != null) {
+                textBox.getChildren().clear();
+            }
+
+            stackPane.getChildren().remove(choiceBoxStack);
+            choiceBoxStack = null; // Clear the reference
+            
+            handleNextText(primaryStage, textBox, Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion2Index]));
+        });
     }
 }
