@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 import Util.Chapter;
 import Util.TextBase;
 
@@ -195,20 +194,15 @@ public class Chapter1 extends Chapter {
 			stackPane.getChildren().remove(choiceBoxStack);
 		});
 
-
         // Add the choice box to the main stack pane
         StackPane.setAlignment(choiceBoxStack, Pos.CENTER);
         stackPane.getChildren().add(choiceBoxStack);
-
 	}
-
 
     @Override
     public void updateCharacterImages() {
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
         String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
-
-
 
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
@@ -231,12 +225,10 @@ public class Chapter1 extends Chapter {
         }
     }
 
-
     @Override
     public void setStoryTexts(String url) {
         storyTexts = new TextBase(url);
     }
-
     
     public void goToNextChapter(Stage primaryStage) {
     	// exitAnimation(primaryStage);
@@ -276,4 +268,3 @@ public class Chapter1 extends Chapter {
         parallelTransition.play();
     }
 }
-

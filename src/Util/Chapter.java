@@ -227,7 +227,6 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         contentText.setFont(loadFont(18));
         textBox.getChildren().addAll(speakerText, contentText);
 
-
         Timeline timeline = new Timeline();
         for (int i = 0; i < currentText.length(); i++) {
             final int index = i;
@@ -239,7 +238,6 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         }
         return timeline;
     }
-
 
     private Font loadFont(int size) {
         return Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), size);
