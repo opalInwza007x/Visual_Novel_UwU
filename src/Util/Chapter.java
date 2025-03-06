@@ -162,30 +162,42 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         }
 
         if (fromAnswerBox == 0) {
-        	if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
-        		currentTextIndex++;
-        	}
+            if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+                currentTextIndex++;
+            }
+        } else {
+            currentTextIndex += fromAnswerBox;
         }
-        else {
-        	currentTextIndex += fromAnswerBox;
-        }
-        
+
         if (currentTextIndex < storyTexts.getStoryTexts().size()) {
+            // สต๊อปเสียงเอฟเฟกต์เก่า
+            if (effectTalking != null && effectTalking.getStatus() == MediaPlayer.Status.PLAYING) {
+                effectTalking.stop();
+            }
+
             updateSpeakerVisibility();
             playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.soundEffectIndex]);
             updateCharacterImages();
-            
+
             if ("ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
                 createAnswerBoxFor2(primaryStage, textBox);
             }
-            timeline.stop();
+
+            // ตรวจสอบว่า timeline ถูกหยุดแล้วและสร้าง timeline ใหม่
+            if (timeline.getStatus() == Animation.Status.RUNNING) {
+                timeline.stop();  // หยุด timeline เก่า
+            }
+
+            // สร้าง timeline ใหม่
             timeline = createTimeline(textBox);
-            timeline.play();
-        } 
-        else {
-        	goToNextChapter(primaryStage);
+            timeline.play();  // เริ่มต้น timeline ใหม่
+
+        } else {
+            goToNextChapter(primaryStage);  // หากไม่มีข้อความให้แสดงไปยังบทถัดไป
         }
     }
+
+
 
 	protected String getImagePath(String speaker, String emotion) {
         switch (speaker) {
@@ -196,44 +208,48 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         }
     }
 
-    protected void playEffectSound(String effect) {
-        if (effectPlayer != null) effectPlayer.stop();
-        URL effectURL = getClass().getResource("/resources/sound/" + effect + ".mp3");
-        if (effectURL != null) {
-            effectPlayer = new MediaPlayer(new Media(effectURL.toExternalForm()));
-            effectPlayer.play();
-        } else {
-            System.out.println("Error: Effect sound file " + effect + " not found!");
-        }
-    }
+	protected void playEffectSound(String effect) {
+	    if (effectPlayer != null && effectPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+	        effectPlayer.stop();  // หยุดเสียงเอฟเฟกต์เก่า
+	    }
+	    
+	    URL effectURL = getClass().getResource("/resources/sound/" + effect + ".mp3");
+	    if (effectURL != null) {
+	        effectPlayer = new MediaPlayer(new Media(effectURL.toExternalForm()));
+	        effectPlayer.play();
+	    } else {
+	        System.out.println("Error: Effect sound file " + effect + " not found!");
+	    }
+	}
 
-    public void playTalkingSound(String talking) {
-        if (effectTalking == null || !effectTalking.getMedia().getSource().contains(talking)) {
-            URL talkingURL = getClass().getResource("/resources/sound/talking_" + talking + ".mp3");
-            if (talkingURL != null) {
-                effectTalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
-                effectTalking.setVolume(0.5);
-            } else {
-                System.out.println("Error: Talking sound file not found!");
-                return;
-            }
-        }
-        
-        if (effectTalking.getStatus() != MediaPlayer.Status.PLAYING) {
-            effectTalking.play();
-        }
-    }
+
+	public void playTalkingSound(String talking) {
+	    if (effectTalking == null || !effectTalking.getMedia().getSource().contains(talking)) {
+	        URL talkingURL = getClass().getResource("/resources/sound/talking_" + talking + ".mp3");
+	        if (talkingURL != null) {
+	            effectTalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
+	            effectTalking.setVolume(0.5);
+	        } else {
+	            System.out.println("Error: Talking sound file not found!");
+	            return;
+	        }
+	    }
+	    
+	    if (effectTalking.getStatus() != MediaPlayer.Status.PLAYING) {
+	        effectTalking.play();  // เล่นเสียงใหม่
+	    }
+	}
     
     private Font loadFont(int size) {
         return Font.loadFont(getClass().getResourceAsStream("/resources/font/Prompt-ExtraLight.ttf"), size);
     }
 
     public Timeline createTimeline(TextFlow textBox) {
-    	if (speakerFont == null || contentFont == null) {
-    		speakerFont = loadFont(20);
-    	    contentFont = loadFont(18);
+        if (speakerFont == null || contentFont == null) {
+            speakerFont = loadFont(20);
+            contentFont = loadFont(18);
         }
-    	
+
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.speakerIndex];
         String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.textIndex];
 
@@ -246,18 +262,26 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
         contentText.setFont(contentFont);
         textBox.getChildren().addAll(speakerText, contentText);
 
-        Timeline timeline = new Timeline();
+        if (timeline.getStatus() == Animation.Status.RUNNING) {
+            timeline.stop();  // หยุด timeline เก่า
+        }
+
+        timeline = new Timeline();
+        StringBuilder displayedText = new StringBuilder();
         for (int i = 0; i < currentText.length(); i++) {
             final int index = i;
             timeline.getKeyFrames().add(new KeyFrame(Duration.millis(33 * (i + 1)), e -> {
-                contentText.setText(contentText.getText() + currentText.charAt(index));
-                if (index % 4 == 0) {
-                	playTalkingSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.talkingSoungIndex]);
+                displayedText.append(currentText.charAt(index));
+                contentText.setText(displayedText.toString()); // อัพเดตข้อความทีละตัวอักษร
+                if (index % 4 == 0 && (effectTalking == null || effectTalking.getStatus() != MediaPlayer.Status.PLAYING)) {
+                    playTalkingSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.talkingSoungIndex]);
                 }
             }));
         }
-        return timeline;
+
+        return timeline;  // คืนค่า timeline ใหม่
     }
+
 
     protected void showNextScene(Stage primaryStage) {
         if (backgroundMusic != null) backgroundMusic.stop();

@@ -26,9 +26,9 @@ public class TextBase {
 		try (BufferedReader reader = new BufferedReader(new FileReader(url))){
 			String line;
 			
-			while((line = reader.readLine()) != null) {
-				line = line.replace("\\n", "\n");
-				String[] splitTexts = line.split("\\$", maxTextIndex);
+			while ((line = reader.readLine()) != null) {
+	            line = line.replace("\\n", "\n").trim(); // ตัดช่องว่างหัวท้าย
+	            String[] splitTexts = line.split("\\$", -1); // ใช้ -1 เพื่อให้ array มีครบทุก
 				
 				texts.add(splitTexts);
 			}
