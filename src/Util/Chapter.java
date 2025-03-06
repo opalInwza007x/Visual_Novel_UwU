@@ -38,6 +38,8 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
     private StackPane choiceBoxStack = null;
     private Font speakerFont;
     private Font contentFont;
+    private Text speakerTextNode;
+    private Text contentTextNode;
 
     protected abstract void startChapter(Stage primaryStage);
     protected abstract void updateCharacterImages();
@@ -155,19 +157,21 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
     }
 
     public void handleNextText(Stage primaryStage, TextFlow textBox, int fromAnswerBox) {
+        // If animation is running and user clicks Next, just show full text immediately
         if (fromAnswerBox == 0 && isRunning()) {
             timeline.stop();
-            updateTextBox(textBox);
+            // Replace with direct text update without animation
+            updateTextBoxInstantly(textBox);
             return;
         }
 
+        // Advance text index
         if (fromAnswerBox == 0) {
-        	if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
-        		currentTextIndex++;
-        	}
-        }
-        else {
-        	currentTextIndex += fromAnswerBox;
+            if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+                currentTextIndex++;
+            }
+        } else {
+            currentTextIndex += fromAnswerBox;
         }
         
         if (currentTextIndex < storyTexts.getStoryTexts().size()) {
@@ -178,13 +182,38 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             if ("ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
                 createAnswerBoxFor2(primaryStage, textBox);
             }
+            
             timeline.stop();
             timeline = createTimeline(textBox);
             timeline.play();
-        } 
-        else {
-        	goToNextChapter(primaryStage);
+        } else {
+            goToNextChapter(primaryStage);
         }
+    }
+
+    private void initializeTextNodes() {
+        speakerFont = loadFont(20);
+        contentFont = loadFont(18);
+        
+        speakerTextNode = new Text();
+        speakerTextNode.setFill(Color.RED);
+        speakerTextNode.setFont(speakerFont);
+        
+        contentTextNode = new Text();
+        contentTextNode.setFont(contentFont);
+    }
+
+    private void updateTextBoxInstantly(TextFlow textBox) {
+        if (speakerTextNode == null) {
+            initializeTextNodes();
+        }
+        
+        String[] currentTextData = storyTexts.getStoryTexts().get(currentTextIndex);
+        
+        speakerTextNode.setText(currentTextData[TextBase.speakerIndex] + "\n");
+        contentTextNode.setText(currentTextData[TextBase.textIndex]);
+        
+        textBox.getChildren().setAll(speakerTextNode, contentTextNode);
     }
 
 	protected String getImagePath(String speaker, String emotion) {
@@ -266,27 +295,6 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
 
     public boolean isRunning() {
         return (timeline.getStatus() == Animation.Status.RUNNING);
-    }
-
-    private void updateTextBox(TextFlow textBox) {
-    	if (speakerFont == null || contentFont == null) {
-    		speakerFont = loadFont(20);
-    	    contentFont = loadFont(18);
-        }
-    	
-        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.speakerIndex];
-        String currentText = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.textIndex];
-        
-        textBox.getChildren().clear();
-        
-        Text speakerText = new Text(currentSpeaker + " \n");
-        speakerText.setFill(Color.RED);
-        speakerText.setFont(speakerFont);
-        
-        Text contentText = new Text(currentText);
-        contentText.setFont(contentFont);
-        
-        textBox.getChildren().addAll(speakerText, contentText);
     }
 
     private boolean isAnswerBoxVisible() {
