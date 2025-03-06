@@ -61,7 +61,7 @@ public class Chapter1 extends Chapter {
 	protected void stateSetup(Stage primaryStage) {
     	playBackgroundMusic("/resources/sound/bgChap1.mp3");
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
-        setStoryTexts("src/resources/texts/Chapter2.txt");
+        setStoryTexts("src/resources/texts/Chapter1.txt");
 
         ImageView background = setupBackground("/resources/background/classroomTest.jpg");
         TextFlow textBox = createTextFlow();
