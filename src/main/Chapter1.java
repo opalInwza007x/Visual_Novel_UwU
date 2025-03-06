@@ -54,7 +54,12 @@ public class Chapter1 extends Chapter {
 
     @Override
     public void startChapter(Stage primaryStage) {
-        playBackgroundMusic("/resources/sound/bgChap1.mp3");
+        stateSetup(primaryStage);
+    }
+    
+    @Override
+	protected void stateSetup(Stage primaryStage) {
+    	playBackgroundMusic("/resources/sound/bgChap1.mp3");
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
         setStoryTexts("src/resources/texts/Chapter2.txt");
 
@@ -88,7 +93,7 @@ public class Chapter1 extends Chapter {
         enterAnimation(root);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
         primaryStage.setTitle("Visual Novel - Chapter 1");
-    }
+	}
     
     @Override
     public ImageView createSpeakerImage(String speaker) {
@@ -195,4 +200,6 @@ public class Chapter1 extends Chapter {
         fadeIn.play();
         parallelTransition.play();
     }
+
+	
 }

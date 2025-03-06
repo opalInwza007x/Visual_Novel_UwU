@@ -54,7 +54,12 @@ public class Chapter2 extends Chapter {
 
     @Override
     public void startChapter(Stage primaryStage) {
-        playBackgroundMusic("/resources/sound/bgChap1.mp3");
+        stateSetup(primaryStage);
+    }
+    
+    @Override
+	protected void stateSetup(Stage primaryStage) {
+    	playBackgroundMusic("/resources/sound/bgChap1.mp3");
         loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
         setStoryTexts("src/resources/texts/Chapter2.txt");
 
