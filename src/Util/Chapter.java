@@ -45,6 +45,7 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
     protected abstract void updateSpeakerVisibility();
     protected abstract void setStoryTexts(String url);
     protected abstract void goToNextChapter(Stage primaryStage);
+    protected abstract void stateSetup(Stage primaryStage);
     
     @Override
     public void playBackgroundMusic(String url) {
