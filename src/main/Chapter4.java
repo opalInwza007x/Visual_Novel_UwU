@@ -117,7 +117,7 @@ public class Chapter4 extends Chapter {
                 height = 290;
                 break;
             case "อาริสา (ร่าง 2)":
-                imagePath = "/resources/arisa/Arisa_shy3_darkMarkMark.png";
+                imagePath = "/resources/arisa/Arisa_shy3.png";
                 width = 220;
                 height = 290;
                 break;

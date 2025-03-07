@@ -179,7 +179,7 @@ public class Chapter5 extends Chapter {
             	father_motherInLawImage.setOpacity(0.6);
             }
         } 
-        else if (currentSpeaker.equals("อาริสา") || currentSpeaker.equals("อาริสา (ร่าง 2)")) {
+        else {
             cashenImage.setOpacity(0.6);
             if (father_motherInLawImage.getOpacity() > 0) {
             	father_motherInLawImage.setOpacity(1.0);
