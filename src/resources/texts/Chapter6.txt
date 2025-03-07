@@ -1,3 +1,4 @@
+normal$คเชน$$Empty$คเชน$read
 normal$คเชน$อาริสา! เธออยู่ไหนกันนะ?$Empty$คเชน$read
 normal$อาริสา$... คเชน$Empty$อาริสา$read
 normal$คเชน$อาริสา! ฉันมา—$Empty$คเชน$read

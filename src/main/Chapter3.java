@@ -61,7 +61,6 @@ public class Chapter3 extends Chapter {
     @Override
 	protected void stateSetup(Stage primaryStage) {
     	playBackgroundMusic("/resources/sound/bgChap1.mp3");
-        loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
         setStoryTexts("src/resources/texts/Chapter3.txt");
 
         ImageView background = setupBackground("/resources/background/BackgroundChapter3.jpg");
@@ -70,7 +69,7 @@ public class Chapter3 extends Chapter {
 
         arisaImage = createSpeakerImage("อาริสา");
         cashenImage = createSpeakerImage("คเชน");
-        strangeUncleImage = createSpeakerImage("ลุงคนแปลกหน้า");
+        strangeUncleImage = createSpeakerImage("ลุงเจ้าของบูธที่ดูแปลก ๆ ");
         updateSpeakerVisibility();
 
         // Stack text box background and text
@@ -92,7 +91,7 @@ public class Chapter3 extends Chapter {
         root.getChildren().addAll(stackPane, textBoxWithButton);
 
         // Setup scene directly
-        enterAnimation(root);
+        enterAnimation(root, textBox);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
         primaryStage.setTitle("Visual Novel - Chapter 3");
     }
@@ -118,7 +117,7 @@ public class Chapter3 extends Chapter {
                 width = 230;
                 height = 290;
                 break;
-            case "ลุงคนแปลกหน้า":
+            case "ลุงเจ้าของบูธที่ดูแปลก ๆ ":
                 imagePath = "/resources/strangeUncle/strangeUncle.png";
                 width = 390;
                 height = 300;
@@ -146,7 +145,8 @@ public class Chapter3 extends Chapter {
 
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
-        } else if(currentSpeaker.equals("อาริสา")) {
+        } 
+        else if(currentSpeaker.equals("อาริสา")) {
             arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", emotion)).toExternalForm()));
         }
     }
@@ -154,14 +154,38 @@ public class Chapter3 extends Chapter {
     @Override
     public void updateSpeakerVisibility() {
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+        String status = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex];
         
-        // Update speaker visibility without animations
+        if (currentTextIndex == 0) {
+            strangeUncleImage.setOpacity(0);
+        }
+        
+        if (status.equals("event")) {
+            strangeUncleImage.setOpacity(1.0);
+        } 
+        else if (status.equals("event2")) {
+        	createTimeSkipAnimation();
+            strangeUncleImage.setOpacity(0);
+        }
+        
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setOpacity(1.0);
             arisaImage.setOpacity(0.6);
-        } else {
+            if (strangeUncleImage.getOpacity() > 0) {
+                strangeUncleImage.setOpacity(0.6);
+            }
+        } 
+        else if (currentSpeaker.equals("อาริสา")) {
             cashenImage.setOpacity(0.6);
             arisaImage.setOpacity(1.0);
+            if (strangeUncleImage.getOpacity() > 0) {
+                strangeUncleImage.setOpacity(0.6);
+            }
+        }
+        else if (currentSpeaker.equals("ลุงเจ้าของบูธที่ดูแปลก ๆ ")) {
+            cashenImage.setOpacity(0.6);
+            arisaImage.setOpacity(0.6);
+            strangeUncleImage.setOpacity(1.0);
         }
     }
 
@@ -178,33 +202,67 @@ public class Chapter3 extends Chapter {
         chapter4.startChapter(primaryStage);
     }
     
-    public void enterAnimation(VBox root) {
-        // Fade in the background
-        FadeTransition backgroundFade = new FadeTransition(Duration.seconds(1.5), stackPane.getChildren().get(0));
-
-        // Slide in speaker images from sides
-        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), arisaImage);
-        friendSlide.setFromX(-300);
-        friendSlide.setToX(0);
-        friendSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-
-        TranslateTransition cashenSlide = new TranslateTransition(Duration.seconds(1), cashenImage);
-        cashenSlide.setFromX(300);
-        cashenSlide.setToX(0);
-        cashenSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-
-        // Parallel animation for simultaneous effects
-        ParallelTransition parallelTransition = new ParallelTransition(
-            backgroundFade, 
-            friendSlide, 
-            cashenSlide
+    private void createTimeSkipAnimation() {
+        // Create a black overlay rectangle for the time skip effect
+        Rectangle timeSkipOverlay = new Rectangle(968, 486);
+        timeSkipOverlay.setFill(Color.BLACK);
+        timeSkipOverlay.setOpacity(0);
+        
+        // Create clock transition text
+        Text timeSkipText = new Text("หลักจากนั้นทั้งคู่ก็ไปเต้นหน้าฮ้าน!!!...");
+        timeSkipText.setFont(Font.font("Serif", FontWeight.BOLD, 30));
+        timeSkipText.setFill(Color.WHITE);
+        timeSkipText.setOpacity(0);
+        
+        // Add the overlay and text to stackPane
+        stackPane.getChildren().addAll(timeSkipOverlay, timeSkipText);
+        
+        // Ensure the text is centered
+        StackPane.setAlignment(timeSkipText, Pos.CENTER);
+        
+        // Hide Strange Uncle
+        FadeTransition hideUncle = new FadeTransition(Duration.seconds(0.5), strangeUncleImage);
+        hideUncle.setToValue(0);
+        
+        // Fade in the overlay
+        FadeTransition fadeInOverlay = new FadeTransition(Duration.seconds(1), timeSkipOverlay);
+        fadeInOverlay.setFromValue(0);
+        fadeInOverlay.setToValue(0.8);
+        
+        // Fade in the text
+        FadeTransition fadeInText = new FadeTransition(Duration.seconds(1), timeSkipText);
+        fadeInText.setFromValue(0);
+        fadeInText.setToValue(1);
+        
+        // Pause to show the time skip message
+        PauseTransition pause = new PauseTransition(Duration.seconds(2.5));
+        
+        // Fade out the text
+        FadeTransition fadeOutText = new FadeTransition(Duration.seconds(1), timeSkipText);
+        fadeOutText.setFromValue(1);
+        fadeOutText.setToValue(0);
+        
+        // Fade out the overlay
+        FadeTransition fadeOutOverlay = new FadeTransition(Duration.seconds(1), timeSkipOverlay);
+        fadeOutOverlay.setFromValue(0.8);
+        fadeOutOverlay.setToValue(0);
+        
+        // Create sequential transition for the entire time skip
+        SequentialTransition timeSkipSequence = new SequentialTransition(
+            hideUncle,
+            fadeInOverlay,
+            fadeInText,
+            pause,
+            fadeOutText,
+            fadeOutOverlay
         );
         
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), root);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
+        // After animation completes, remove the added elements
+        timeSkipSequence.setOnFinished(e -> {
+            stackPane.getChildren().removeAll(timeSkipOverlay, timeSkipText);
+        });
         
-        fadeIn.play();
-        parallelTransition.play();
+        // Play the time skip animation
+        timeSkipSequence.play();
     }
 }
