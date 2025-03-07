@@ -59,8 +59,7 @@ public class Chapter7 extends Chapter {
 	    
 	    @Override
 		protected void stateSetup(Stage primaryStage) {
-	    	playBackgroundMusic("/resources/sound/bgChap1.mp3");
-	        loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
+	    	playBackgroundMusic("/resources/sound/epicending.mp3");
 	        setStoryTexts("src/resources/texts/Chapter7.txt");
 
 	        ImageView background = setupBackground("/resources/background/BackgroundChapter2.png");

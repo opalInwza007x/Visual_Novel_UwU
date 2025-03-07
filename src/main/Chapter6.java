@@ -59,8 +59,7 @@ public class Chapter6 extends Chapter {
 	    
 	    @Override
 		protected void stateSetup(Stage primaryStage) {
-	    	playBackgroundMusic("/resources/sound/bgChap1.mp3");
-	        loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
+	    	playBackgroundMusic("/resources/sound/bgChap6.mp3");
 	        setStoryTexts("src/resources/texts/Chapter6.txt");
 
 	        ImageView background = setupBackground("/resources/background/BackgroundChapter6.png");
@@ -169,6 +168,49 @@ public class Chapter6 extends Chapter {
 	            else {
 	            	arisaImage.setOpacity(1.0);
 	            }
+	        }
+	    }
+	    
+	    @Override
+	    public void handleNextText(Stage primaryStage, TextFlow textBox, int fromAnswerBox) {
+	        // If animation is running and user clicks Next, just show full text immediately
+	        if (fromAnswerBox == 0 && isRunning()) {
+	            timeline.stop();
+	            // Replace with direct text update without animation
+	            updateTextBoxInstantly(textBox);
+	            return;
+	        }
+
+	        // Advance text index
+	        if (fromAnswerBox == 0) {
+	            if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+	                currentTextIndex++;
+	            }
+	            if (currentTextIndex < storyTexts.getStoryTexts().size() && ("stopmusic".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex]))) {
+	            	backgroundMusic.stop();
+	            }
+	            else if (!backgroundMusic.getStatus().equals(MediaPlayer.Status.PLAYING)) {
+	            	backgroundMusic.play();
+	            }
+	        } 
+	        else {
+	            currentTextIndex += fromAnswerBox;
+	        }
+	        
+	        if (currentTextIndex < storyTexts.getStoryTexts().size()) {
+	            updateSpeakerVisibility();
+	            playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.soundEffectIndex]);
+	            updateCharacterImages();
+	            
+	            if ("ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+	                createAnswerBoxFor2(primaryStage, textBox);
+	            }
+	            
+	            timeline.stop();
+	            timeline = createTimeline(textBox);
+	            timeline.play();
+	        } else {
+	            goToNextChapter(primaryStage);
 	        }
 	    }
 

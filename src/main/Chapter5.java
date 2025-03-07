@@ -59,8 +59,7 @@ public class Chapter5 extends Chapter {
     
     @Override
 	protected void stateSetup(Stage primaryStage) {
-    	playBackgroundMusic("/resources/sound/bgChap1.mp3");
-        loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
+    	playBackgroundMusic("/resources/sound/bgChap5.mp3");
         setStoryTexts("src/resources/texts/Chapter5.txt");
 
         ImageView background = setupBackground("/resources/background/BackgroundChapter5.png");
@@ -179,11 +178,54 @@ public class Chapter5 extends Chapter {
             	father_motherInLawImage.setOpacity(0.6);
             }
         } 
-        else {
+        else if (currentSpeaker.equals("อาริสา") || currentSpeaker.equals("อาริสา (ร่าง 2)")) {
             cashenImage.setOpacity(0.6);
             if (father_motherInLawImage.getOpacity() > 0) {
             	father_motherInLawImage.setOpacity(1.0);
             }
+        }
+    }
+    
+    @Override
+    public void handleNextText(Stage primaryStage, TextFlow textBox, int fromAnswerBox) {
+        // If animation is running and user clicks Next, just show full text immediately
+        if (fromAnswerBox == 0 && isRunning()) {
+            timeline.stop();
+            // Replace with direct text update without animation
+            updateTextBoxInstantly(textBox);
+            return;
+        }
+
+        // Advance text index
+        if (fromAnswerBox == 0) {
+            if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+                currentTextIndex++;
+            }
+            if (currentTextIndex < storyTexts.getStoryTexts().size() && ("event".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex]) || "stopmusic".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex]))) {
+            	backgroundMusic.stop();
+            }
+            else if (!backgroundMusic.getStatus().equals(MediaPlayer.Status.PLAYING)) {
+            	backgroundMusic.play();
+            }
+        } 
+        else {
+            currentTextIndex += fromAnswerBox;
+        }
+        
+        if (currentTextIndex < storyTexts.getStoryTexts().size()) {
+            updateSpeakerVisibility();
+            playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.soundEffectIndex]);
+            updateCharacterImages();
+            
+            if ("ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+                createAnswerBoxFor2(primaryStage, textBox);
+            }
+            
+            timeline.stop();
+            timeline = createTimeline(textBox);
+            timeline.play();
+        } else {
+            goToNextChapter(primaryStage);
         }
     }
 

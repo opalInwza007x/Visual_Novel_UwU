@@ -37,8 +37,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import logic.GameLogic;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
+import java.awt.MediaTracker;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,8 +62,7 @@ public class Chapter4 extends Chapter {
     
     @Override
 	protected void stateSetup(Stage primaryStage) {
-    	playBackgroundMusic("/resources/sound/bgChap1.mp3");
-        loadSoundEffect(Arrays.asList("whoosh", "pop", "wow"));
+    	playBackgroundMusic("/resources/sound/bgChap4.mp3");
         setStoryTexts("src/resources/texts/Chapter4.txt");
 
         ImageView background = setupBackground("/resources/background/BackgroundChapter4.jpg");
@@ -117,7 +119,7 @@ public class Chapter4 extends Chapter {
                 height = 290;
                 break;
             case "อาริสา (ร่าง 2)":
-                imagePath = "/resources/arisa/Arisa_shy3.png";
+                imagePath = "/resources/arisa/Arisa_shy3_darkMarkMark.png";
                 width = 220;
                 height = 290;
                 break;
@@ -180,6 +182,58 @@ public class Chapter4 extends Chapter {
             if (arisaImage.getOpacity() > 0) {
                 arisaImage.setOpacity(1.0);
             }
+        }
+    }
+    
+    @Override
+    public void handleNextText(Stage primaryStage, TextFlow textBox, int fromAnswerBox) {
+        // If animation is running and user clicks Next, just show full text immediately
+        if (fromAnswerBox == 0 && isRunning()) {
+            timeline.stop();
+            // Replace with direct text update without animation
+            updateTextBoxInstantly(textBox);
+            return;
+        }
+        
+        String status = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex];
+
+        // Advance text index
+        if (fromAnswerBox == 0) {
+            if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+                if (status.equals("eventStartEndGame") && GameLogic.getInstance().isHaveMeat()) {
+            		currentTextIndex += 8;
+                }
+                currentTextIndex++;
+            }
+            if (currentTextIndex < storyTexts.getStoryTexts().size() && ("event".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex]) || "stopmusic".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex]))) {
+            	backgroundMusic.stop();
+            }
+            else if (!backgroundMusic.getStatus().equals(MediaPlayer.Status.PLAYING)) {
+            	backgroundMusic.play();
+            }
+        } 
+        else {
+            currentTextIndex += fromAnswerBox;
+        }
+        
+        if (currentTextIndex < storyTexts.getStoryTexts().size()) {
+            updateSpeakerVisibility();
+            playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.soundEffectIndex]);
+            updateCharacterImages();
+            
+            if ("ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+                createAnswerBoxFor2(primaryStage, textBox);
+            }
+            
+            timeline.stop();
+            timeline = createTimeline(textBox);
+            timeline.play();
+        } else {
+            goToNextChapter(primaryStage);
+        }
+        
+        if (status.equals("eventEndEndGame")) {
+            System.exit(0);
         }
     }
 

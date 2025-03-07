@@ -32,7 +32,6 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import logic.GameLogic;
 
 public abstract class Chapter implements HaveBackgroundMusic, HaveText {
     protected TextBase storyTexts;
@@ -171,15 +170,9 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             return;
         }
         
-        String status = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex];
-    
-        // Advance text index
         if (fromAnswerBox == 0) {
             if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
-            	if (status.equals("eventStartEndGame") && GameLogic.getInstance().isHaveMeat()) {
-            		currentTextIndex += 8;
-                }
-            	currentTextIndex++;
+                currentTextIndex++;
             }
         } 
         else {
@@ -198,13 +191,8 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             timeline.stop();
             timeline = createTimeline(textBox);
             timeline.play();
-        } 
-        else {
+        } else {
             goToNextChapter(primaryStage);
-        }
-        
-        if (status.equals("eventEndEndGame")) {
-            System.exit(0);
         }
     }
 
@@ -264,7 +252,7 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
                 effectTalking = new MediaPlayer(new Media(talkingURL.toExternalForm()));
                 effectTalking.setVolume(0.5);
             } else {
-                System.out.println("Error: Talking sound file not found!");
+                System.out.println("Error: Talking sound file " + talking + "not found!");
                 return;
             }
         }
@@ -382,10 +370,6 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
 
             stackPane.getChildren().remove(choiceBoxStack);
             choiceBoxStack = null; // Clear the reference
-            
-            if (getChapterNumber() == 3 && currentTextIndex >= 19) {
-            	GameLogic.getInstance().setHaveMeat(true);
-            }
             
             handleNextText(primaryStage, textBox, Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion1Index]));
         });

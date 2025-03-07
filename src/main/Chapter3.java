@@ -49,166 +49,221 @@ import Util.Chapter;
 import Util.TextBase;
 
 public class Chapter3 extends Chapter {
-    private ImageView arisaImage;
-    private ImageView cashenImage;
-    private ImageView strangeUncleImage;
+	private ImageView arisaImage;
+	private ImageView cashenImage;
+	private ImageView strangeUncleImage;
 
-    @Override
-    public void startChapter(Stage primaryStage) {
-        stateSetup(primaryStage);
-    }
-    
-    @Override
+	@Override
+	public void startChapter(Stage primaryStage) {
+		stateSetup(primaryStage);
+	}
+
+	@Override
 	protected void stateSetup(Stage primaryStage) {
-    	playBackgroundMusic("/resources/sound/bgChap1.mp3");
-        setStoryTexts("src/resources/texts/Chapter3.txt");
+		playBackgroundMusic("/resources/sound/talking_ambience.mp3");
+		setStoryTexts("src/resources/texts/Chapter3.txt");
 
-        ImageView background = setupBackground("/resources/background/BackgroundChapter3.jpg");
-        TextFlow textBox = createTextFlow();
-        Button nextButton = createNextButton(primaryStage, textBox);
+		ImageView background = setupBackground("/resources/background/BackgroundChapter3.jpg");
+		TextFlow textBox = createTextFlow();
+		Button nextButton = createNextButton(primaryStage, textBox);
 
-        arisaImage = createSpeakerImage("อาริสา");
-        cashenImage = createSpeakerImage("คเชน");
-        strangeUncleImage = createSpeakerImage("ลุงเจ้าของบูธที่ดูแปลก ๆ ");
-        updateSpeakerVisibility();
+		arisaImage = createSpeakerImage("อาริสา");
+		cashenImage = createSpeakerImage("คเชน");
+		strangeUncleImage = createSpeakerImage("ลุงเจ้าของบูธที่ดูแปลก ๆ ");
+		updateSpeakerVisibility();
 
-        // Stack text box background and text
-        StackPane textBoxStack = createTextBoxStack(textBox);
-        StackPane textBoxWithButton = createTextBoxWithButton(textBoxStack, nextButton);
+		// Stack text box background and text
+		StackPane textBoxStack = createTextBoxStack(textBox);
+		StackPane textBoxWithButton = createTextBoxWithButton(textBoxStack, nextButton);
 
-        // Speaker images container
-        HBox speakerPane = new HBox(80,strangeUncleImage, cashenImage, arisaImage);
-        speakerPane.setAlignment(Pos.BOTTOM_CENTER);
+		// Speaker images container
+		HBox speakerPane = new HBox(80, strangeUncleImage, cashenImage, arisaImage);
+		speakerPane.setAlignment(Pos.BOTTOM_CENTER);
 
-        stackPane = new StackPane(background, speakerPane);
-        timeline = createTimeline(textBox);
-        timeline.play();
+		stackPane = new StackPane(background, speakerPane);
+		timeline = createTimeline(textBox);
+		timeline.play();
 
-        // Setup root directly
-        VBox root = new VBox(10);
-        root.setAlignment(Pos.CENTER);
-        root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-        root.getChildren().addAll(stackPane, textBoxWithButton);
+		// Setup root directly
+		VBox root = new VBox(10);
+		root.setAlignment(Pos.CENTER);
+		root.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+		root.getChildren().addAll(stackPane, textBoxWithButton);
 
-        // Setup scene directly
-        enterAnimation(root, textBox);
-        primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
-        primaryStage.setTitle("Visual Novel - Chapter 3");
-    }
-    
-    @Override
-    public ImageView createSpeakerImage(String speaker) {
-        String imagePath;
-        int width, height;
+		// Setup scene directly
+		enterAnimation(root, textBox);
+		primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
+		primaryStage.setTitle("Visual Novel - Chapter 3");
+	}
 
-        switch (speaker) {
-            case "คเชน":
-                imagePath = "/resources/cashen/cashen_normal.png";
-                width = 200;
-                height = 300;
-                break;
-            case "เพื่อน":
-                imagePath = "/resources/friend/friend_normal.png";
-                width = 260;
-                height = 300;
-                break;
-            case "อาริสา":
-                imagePath = "/resources/arisa/Arisa_smile.png";
-                width = 230;
-                height = 290;
-                break;
-            case "ลุงเจ้าของบูธที่ดูแปลก ๆ ":
-                imagePath = "/resources/strangeUncle/strangeUncle.png";
-                width = 390;
-                height = 300;
-                break;
-            default:
-                System.out.println("Unknown speaker: " + speaker);
-                return new ImageView(); // TODO Unknown speaker
-        }
+	@Override
+	public ImageView createSpeakerImage(String speaker) {
+		String imagePath;
+		int width, height;
 
-        ImageView img = createImageView(imagePath, width, height);
-        
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setColor(Color.BLACK);
-        dropShadow.setRadius(10);
-        dropShadow.setSpread(0.1);
-        img.setEffect(dropShadow);
+		switch (speaker) {
+		case "คเชน":
+			imagePath = "/resources/cashen/cashen_normal.png";
+			width = 200;
+			height = 300;
+			break;
+		case "เพื่อน":
+			imagePath = "/resources/friend/friend_normal.png";
+			width = 260;
+			height = 300;
+			break;
+		case "อาริสา":
+			imagePath = "/resources/arisa/Arisa_smile.png";
+			width = 230;
+			height = 290;
+			break;
+		case "ลุงเจ้าของบูธที่ดูแปลก ๆ ":
+			imagePath = "/resources/strangeUncle/strangeUncle.png";
+			width = 390;
+			height = 300;
+			break;
+		default:
+			System.out.println("Unknown speaker: " + speaker);
+			return new ImageView(); // TODO Unknown speaker
+		}
 
-        return img;
-    }
+		ImageView img = createImageView(imagePath, width, height);
 
-    @Override
-    public void updateCharacterImages() {
-        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
-        String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
+		DropShadow dropShadow = new DropShadow();
+		dropShadow.setColor(Color.BLACK);
+		dropShadow.setRadius(10);
+		dropShadow.setSpread(0.1);
+		img.setEffect(dropShadow);
 
-        if (currentSpeaker.equals("คเชน")) {
-            cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
-        } 
-        else if(currentSpeaker.equals("อาริสา")) {
-            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", emotion)).toExternalForm()));
-        }
-    }
+		return img;
+	}
 
-    @Override
-    public void updateSpeakerVisibility() {
-        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
-        String status = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex];
-        
-        if (currentTextIndex == 0) {
-            strangeUncleImage.setOpacity(0);
-        }
-        
-        if (status.equals("event")) {
-        	FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), strangeUncleImage);
-            fadeIn.setFromValue(0.0);
-            fadeIn.setToValue(1.0);
-            fadeIn.play();
-        } 
-        else if (status.equals("event2")) {
-        	createTimeSkipAnimation();
-        	FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), strangeUncleImage);
-        	fadeOut.setFromValue(1.0);
-        	fadeOut.setToValue(0.0);
-        	fadeOut.play();
-        }
-        
-        if (currentSpeaker.equals("คเชน")) {
-            cashenImage.setOpacity(1.0);
-            arisaImage.setOpacity(0.6);
-            if (strangeUncleImage.getOpacity() > 0) {
-                strangeUncleImage.setOpacity(0.6);
-            }
-        } 
-        else if (currentSpeaker.equals("อาริสา")) {
-            cashenImage.setOpacity(0.6);
-            arisaImage.setOpacity(1.0);
-            if (strangeUncleImage.getOpacity() > 0) {
-                strangeUncleImage.setOpacity(0.6);
-            }
-        }
-        else if (currentSpeaker.equals("ลุงเจ้าของบูธที่ดูแปลก ๆ ")) {
-            cashenImage.setOpacity(0.6);
-            arisaImage.setOpacity(0.6);
-            strangeUncleImage.setOpacity(1.0);
-        }
-    }
+	@Override
+	public void updateCharacterImages() {
+		String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+		String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
 
-    @Override
-    public void setStoryTexts(String url) {
-        storyTexts = new TextBase(url);
-    }
-    
-    public void goToNextChapter(Stage primaryStage) {
-    	// exitAnimation(primaryStage);
-    	backgroundMusic.stop();
-    	
-    	Chapter4 chapter4 = new Chapter4();
-        chapter4.startChapter(primaryStage);
-    }
-    
-    private void createTimeSkipAnimation() {
+		if (currentSpeaker.equals("คเชน")) {
+			cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
+		} 
+		else if (currentSpeaker.equals("อาริสา")) {
+			arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", emotion)).toExternalForm()));
+		}
+	}
+
+	@Override
+	public void updateSpeakerVisibility() {
+		String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+		String status = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex];
+
+		if (currentTextIndex == 0) {
+			strangeUncleImage.setOpacity(0);
+		}
+
+		if (status.equals("event")) {
+			strangeUncleImage.setOpacity(1.0);
+		} 
+		else if (status.equals("event2")) {
+			createTimeSkipAnimation();
+			strangeUncleImage.setOpacity(0);
+		}
+
+		if (currentSpeaker.equals("คเชน")) {
+			cashenImage.setOpacity(1.0);
+			arisaImage.setOpacity(0.6);
+			if (strangeUncleImage.getOpacity() > 0) {
+				strangeUncleImage.setOpacity(0.6);
+			}
+		} 
+		else if (currentSpeaker.equals("อาริสา")) {
+			cashenImage.setOpacity(0.6);
+			arisaImage.setOpacity(1.0);
+			if (strangeUncleImage.getOpacity() > 0) {
+				strangeUncleImage.setOpacity(0.6);
+			}
+		} 
+		else if (currentSpeaker.equals("ลุงเจ้าของบูธที่ดูแปลก ๆ ")) {
+			cashenImage.setOpacity(0.6);
+			arisaImage.setOpacity(0.6);
+			strangeUncleImage.setOpacity(1.0);
+		}
+	}
+
+	@Override
+	public void playBackgroundMusic(String url) {
+		try {
+			URL resource = getClass().getResource(url);
+			if (resource != null) {
+				Media media = new Media(resource.toExternalForm());
+				backgroundMusic = new MediaPlayer(media);
+				backgroundMusic.setCycleCount(MediaPlayer.INDEFINITE); // เล่นวนลูป
+				backgroundMusic.setVolume(0.4); // ตั้งค่าความดัง (0.0 - 1.0)
+				backgroundMusic.play();
+			} 
+			else {
+				System.out.println("Error: Background music file not found!");
+			}
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void handleNextText(Stage primaryStage, TextFlow textBox, int fromAnswerBox) {
+		// If animation is running and user clicks Next, just show full text immediately
+		if (fromAnswerBox == 0 && isRunning()) {
+			timeline.stop();
+			// Replace with direct text update without animation
+			updateTextBoxInstantly(textBox);
+			return;
+		}
+
+		// Advance text index
+		if (fromAnswerBox == 0) {
+			if (!"ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+				currentTextIndex++;
+			}
+			if (currentTextIndex < storyTexts.getStoryTexts().size() && "running".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+				backgroundMusic.stop();
+			}
+		} 
+		else {
+			currentTextIndex += fromAnswerBox;
+		}
+
+		if (currentTextIndex < storyTexts.getStoryTexts().size()) {
+			updateSpeakerVisibility();
+			playEffectSound(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.soundEffectIndex]);
+			updateCharacterImages();
+
+			if ("ask2".equals(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex])) {
+				createAnswerBoxFor2(primaryStage, textBox);
+			}
+
+			timeline.stop();
+			timeline = createTimeline(textBox);
+			timeline.play();
+		} 
+		else {
+			goToNextChapter(primaryStage);
+		}
+	}
+
+	@Override
+	public void setStoryTexts(String url) {
+		storyTexts = new TextBase(url);
+	}
+
+	public void goToNextChapter(Stage primaryStage) {
+		// exitAnimation(primaryStage);
+		backgroundMusic.stop();
+
+		Chapter4 chapter4 = new Chapter4();
+		chapter4.startChapter(primaryStage);
+	}
+
+	private void createTimeSkipAnimation() {
         // Create a black overlay rectangle for the time skip effect
         Rectangle timeSkipOverlay = new Rectangle(968, 486);
         timeSkipOverlay.setFill(Color.BLACK);
