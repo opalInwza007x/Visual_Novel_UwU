@@ -42,6 +42,4 @@ public class GameLogic {
 	public void setArisaLike(double arisaLike) {
 		this.arisaLike = arisaLike;
 	}
-	
-	
 }
