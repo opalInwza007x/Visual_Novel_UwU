@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.SequentialTransition;
 import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -24,6 +27,7 @@ import javafx.scene.paint.RadialGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -381,5 +385,98 @@ public abstract class Chapter implements HaveBackgroundMusic, HaveText {
             
             handleNextText(primaryStage, textBox, Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion2Index]));
         });
+    }
+    
+    protected void enterAnimation(VBox root, TextFlow textBox) {
+        // Immediately hide all existing content
+        for (int i = 0; i < stackPane.getChildren().size(); i++) {
+            stackPane.getChildren().get(i).setVisible(false);
+        }
+        
+        // Create chapter title text
+        Text chapterTitle = new Text("Chapter " + getChapterNumber());
+        chapterTitle.setFont(Font.font("Serif", FontWeight.BOLD, 60));
+        chapterTitle.setFill(Color.WHITE);
+        
+        // Add glow effect to title
+        DropShadow glow = new DropShadow();
+        glow.setColor(Color.WHITE);
+        glow.setRadius(15);
+        glow.setSpread(0.3);
+        chapterTitle.setEffect(glow);
+        
+        // Create a black overlay rectangle for the background
+        Rectangle blackOverlay = new Rectangle(968, 1500, Color.BLACK);
+        
+        // Add title and overlay to stackPane at the top level
+        stackPane.getChildren().add(blackOverlay);
+        stackPane.getChildren().add(chapterTitle);
+        
+        // Ensure the title is centered
+        StackPane.setAlignment(chapterTitle, Pos.CENTER);
+        
+        // Fade in chapter title
+        FadeTransition titleFadeIn = new FadeTransition(Duration.seconds(2), chapterTitle);
+        titleFadeIn.setFromValue(0);
+        titleFadeIn.setToValue(1);
+        
+        // Pause to display the title
+        PauseTransition displayPause = new PauseTransition(Duration.seconds(3));
+        
+        // Fade out title
+        FadeTransition titleFadeOut = new FadeTransition(Duration.seconds(1.5), chapterTitle);
+        titleFadeOut.setFromValue(1);
+        titleFadeOut.setToValue(0);
+        
+        // Create sequential transition for the chapter intro
+        SequentialTransition chapterIntro = new SequentialTransition(
+            titleFadeIn,
+            displayPause,
+            titleFadeOut
+        );
+        
+        // After the chapter intro finishes, fade in the actual game scene
+        chapterIntro.setOnFinished(e -> {
+            // Remove the chapter intro elements
+            stackPane.getChildren().remove(blackOverlay);
+            stackPane.getChildren().remove(chapterTitle);
+            
+            // Make all original elements visible again
+            for (int i = 0; i < stackPane.getChildren().size(); i++) {
+                stackPane.getChildren().get(i).setVisible(true);
+            }
+            
+            // Fade in the game scene
+            FadeTransition sceneFadeIn = new FadeTransition(Duration.seconds(1.5), root);
+            sceneFadeIn.setFromValue(0);
+            sceneFadeIn.setToValue(1);
+            
+            // IMPORTANT: Only start the text timeline after the scene fade-in is complete
+            sceneFadeIn.setOnFinished(event -> {
+                // Only now do we start the text timeline
+                timeline.play();
+            });
+            
+            sceneFadeIn.play();
+        });
+        
+        // Set initial opacity of root to 1 for the black screen with chapter text
+        root.setOpacity(1.0);
+        
+        // Play the chapter intro animation
+        chapterIntro.play();
+    }
+    
+    protected int getChapterNumber() {
+        String className = this.getClass().getSimpleName();
+        if (className.contains("Chapter")) {
+            try {
+                return Integer.parseInt(className.replace("Chapter", ""));
+            } 
+            catch (NumberFormatException e) {
+                return 1;
+            }
+        }
+        return 1;
     }
 }

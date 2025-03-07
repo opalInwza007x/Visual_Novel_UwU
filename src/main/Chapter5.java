@@ -49,10 +49,8 @@ import Util.Chapter;
 import Util.TextBase;
 
 public class Chapter5 extends Chapter {
-    
     private ImageView cashenImage;
     private ImageView father_motherInLawImage;
-    
 
     @Override
     public void startChapter(Stage primaryStage) {
@@ -92,7 +90,7 @@ public class Chapter5 extends Chapter {
         root.getChildren().addAll(stackPane, textBoxWithButton);
 
         // Setup scene directly
-        enterAnimation(root);
+        enterAnimation(root, textBox);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
         primaryStage.setTitle("Visual Novel - Chapter 5");
     }
@@ -147,7 +145,8 @@ public class Chapter5 extends Chapter {
 
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
-        } else if(currentSpeaker.equals("พ่อตา") ||  currentSpeaker.equals("ชายคนแปลกหน้า") ) {
+        } 
+        else if(currentSpeaker.equals("พ่อตา") ||  currentSpeaker.equals("แม่ยาย") ) {
         	father_motherInLawImage.setImage(new Image(getClass().getResource(getImagePath("พ่อตา", emotion)).toExternalForm()));
         }
     }
@@ -155,14 +154,36 @@ public class Chapter5 extends Chapter {
     @Override
     public void updateSpeakerVisibility() {
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+        String status = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex];
         
-        // Update speaker visibility without animations
+        if (currentTextIndex == 0) {
+        	father_motherInLawImage.setOpacity(0);
+        }
+        
+        if (status.equals("event")) {
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), father_motherInLawImage);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        }
+        else if (status.equals("event2")) {
+        	FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), father_motherInLawImage);
+        	fadeOut.setFromValue(1.0);
+        	fadeOut.setToValue(0.0);
+        	fadeOut.play();
+        }
+
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setOpacity(1.0);
-            father_motherInLawImage.setOpacity(0.6);
-        } else {
+            if (father_motherInLawImage.getOpacity() > 0) {
+            	father_motherInLawImage.setOpacity(0.6);
+            }
+        } 
+        else if (currentSpeaker.equals("อาริสา") || currentSpeaker.equals("อาริสา (ร่าง 2)")) {
             cashenImage.setOpacity(0.6);
-            father_motherInLawImage.setOpacity(1.0);
+            if (father_motherInLawImage.getOpacity() > 0) {
+            	father_motherInLawImage.setOpacity(1.0);
+            }
         }
     }
 
@@ -177,35 +198,5 @@ public class Chapter5 extends Chapter {
     	
     	Chapter5 chapter5 = new Chapter5();
         chapter5.startChapter(primaryStage);
-    }
-    
-    public void enterAnimation(VBox root) {
-        // Fade in the background
-        FadeTransition backgroundFade = new FadeTransition(Duration.seconds(1.5), stackPane.getChildren().get(0));
-
-        // Slide in speaker images from sides
-        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), father_motherInLawImage);
-        friendSlide.setFromX(-300);
-        friendSlide.setToX(0);
-        friendSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-
-        TranslateTransition cashenSlide = new TranslateTransition(Duration.seconds(1), cashenImage);
-        cashenSlide.setFromX(300);
-        cashenSlide.setToX(0);
-        cashenSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-
-        // Parallel animation for simultaneous effects
-        ParallelTransition parallelTransition = new ParallelTransition(
-            backgroundFade, 
-            friendSlide, 
-            cashenSlide
-        );
-        
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), root);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        
-        fadeIn.play();
-        parallelTransition.play();
     }
 }

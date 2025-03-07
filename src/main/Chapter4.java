@@ -67,7 +67,7 @@ public class Chapter4 extends Chapter {
         TextFlow textBox = createTextFlow();
         Button nextButton = createNextButton(primaryStage, textBox);
 
-        arisaImage = createSpeakerImage("อาริสา");
+        arisaImage = createSpeakerImage("อาริสา (ร่าง 2)");
         cashenImage = createSpeakerImage("คเชน");
         updateSpeakerVisibility();
 
@@ -90,7 +90,7 @@ public class Chapter4 extends Chapter {
         root.getChildren().addAll(stackPane, textBoxWithButton);
 
         // Setup scene directly
-        enterAnimation(root);
+        enterAnimation(root, textBox);
         primaryStage.setScene(new Scene(root, 968, 648, Color.BLACK));
         primaryStage.setTitle("Visual Novel - Chapter 4");
     }
@@ -112,9 +112,14 @@ public class Chapter4 extends Chapter {
                 height = 300;
                 break;
             case "อาริสา":
+                imagePath = "/resources/arisa/Arisa_worry.png";
+                width = 240;
+                height = 290;
+                break;
+            case "อาริสา (ร่าง 2)":
                 imagePath = "/resources/arisa/Arisa_shy3_darkMarkMark.png";
                 width = 220;
-                height = 310;
+                height = 290;
                 break;
             default:
                 System.out.println("Unknown speaker: " + speaker);
@@ -139,22 +144,42 @@ public class Chapter4 extends Chapter {
 
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
-        } else {
-            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", "shy3_darkMarkMark")).toExternalForm()));
+        } 
+        else if(currentSpeaker.equals("อาริสา")) {
+            arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", emotion)).toExternalForm()));
         }
     }
 
     @Override
     public void updateSpeakerVisibility() {
         String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+        String status = storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.readingStatusIndex];
+
+        if (currentTextIndex == 0) {
+            arisaImage.setOpacity(0);
+        }
         
-        // Update speaker visibility without animations
+        if (status.equals("event")) {
+            FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), arisaImage);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
+        }
+        else if (status.equals("event2")) {
+        	arisaImage.setOpacity(0);
+        }
+
         if (currentSpeaker.equals("คเชน")) {
             cashenImage.setOpacity(1.0);
-            arisaImage.setOpacity(0.6);
-        } else {
+            if (arisaImage.getOpacity() > 0) {
+                arisaImage.setOpacity(0.6);
+            }
+        } 
+        else if (currentSpeaker.equals("อาริสา") || currentSpeaker.equals("อาริสา (ร่าง 2)")) {
             cashenImage.setOpacity(0.6);
-            arisaImage.setOpacity(1.0);
+            if (arisaImage.getOpacity() > 0) {
+                arisaImage.setOpacity(1.0);
+            }
         }
     }
 
@@ -169,35 +194,5 @@ public class Chapter4 extends Chapter {
     	
     	Chapter5 chapter5 = new Chapter5();
         chapter5.startChapter(primaryStage);
-    }
-    
-    public void enterAnimation(VBox root) {
-        // Fade in the background
-        FadeTransition backgroundFade = new FadeTransition(Duration.seconds(1.5), stackPane.getChildren().get(0));
-
-        // Slide in speaker images from sides
-        TranslateTransition friendSlide = new TranslateTransition(Duration.seconds(1), arisaImage);
-        friendSlide.setFromX(-300);
-        friendSlide.setToX(0);
-        friendSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-
-        TranslateTransition cashenSlide = new TranslateTransition(Duration.seconds(1), cashenImage);
-        cashenSlide.setFromX(300);
-        cashenSlide.setToX(0);
-        cashenSlide.setInterpolator(javafx.animation.Interpolator.EASE_OUT);
-
-        // Parallel animation for simultaneous effects
-        ParallelTransition parallelTransition = new ParallelTransition(
-            backgroundFade, 
-            friendSlide, 
-            cashenSlide
-        );
-        
-        FadeTransition fadeIn = new FadeTransition(Duration.seconds(3), root);
-        fadeIn.setFromValue(0);
-        fadeIn.setToValue(1);
-        
-        fadeIn.play();
-        parallelTransition.play();
     }
 }
