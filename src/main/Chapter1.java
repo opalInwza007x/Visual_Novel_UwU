@@ -60,7 +60,7 @@ public class Chapter1 extends Chapter {
     @Override
     protected void stateSetup(Stage primaryStage) {
         playBackgroundMusic("/resources/sound/bgChap1T.mp3");
-        setStoryTexts("src/resources/texts/Chapter1.txt");
+        setStoryTexts("/resources/texts/Chapter1.txt");
 
         ImageView background = setupBackground("/resources/background/BackgroundChapter1.jpg");
         TextFlow textBox = createTextFlow();

@@ -2,6 +2,8 @@ package Util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -23,18 +25,26 @@ public class TextBase {
 	public TextBase() {}
 	
 	public TextBase(String url) {
-		try (BufferedReader reader = new BufferedReader(new FileReader(url))){
-			String line;
-			
-			while ((line = reader.readLine()) != null) {
-	            line = line.replace("\\n", "\n").trim(); // ตัดช่องว่างหัวท้าย
-	            String[] splitTexts = line.split("\\$", -1); // ใช้ -1 เพื่อให้ array มีครบทุก
-				
-				texts.add(splitTexts);
-			}
-		}catch (Exception err) {
-			System.out.println("Error reading file: " + err.getMessage());
-		}
+	    try {
+	        URL resource = getClass().getResource(url);
+	        if (resource != null) {
+	            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.openStream()))) {
+	                String line;
+	                
+	                while ((line = reader.readLine()) != null) {
+	                    line = line.replace("\\n", "\n").trim(); // ตัดช่องว่างหัวท้าย
+	                    String[] splitTexts = line.split("\\$", -1); // ใช้ -1 เพื่อให้ array มีครบทุก
+	                    
+	                    texts.add(splitTexts);
+	                }
+	            }
+	        } else {
+	            System.out.println("Error: File not found at path: " + url);
+	        }
+	    } catch (Exception err) {
+	        System.out.println("Error reading file: " + err.getMessage());
+	        err.printStackTrace();
+	    }
 	}
 	
 	public TextBase(ArrayList<String[]> texts) {
