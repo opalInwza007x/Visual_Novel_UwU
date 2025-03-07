@@ -161,11 +161,17 @@ public class Chapter3 extends Chapter {
         }
         
         if (status.equals("event")) {
-            strangeUncleImage.setOpacity(1.0);
+        	FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), strangeUncleImage);
+            fadeIn.setFromValue(0.0);
+            fadeIn.setToValue(1.0);
+            fadeIn.play();
         } 
         else if (status.equals("event2")) {
         	createTimeSkipAnimation();
-            strangeUncleImage.setOpacity(0);
+        	FadeTransition fadeOut = new FadeTransition(Duration.seconds(2), strangeUncleImage);
+        	fadeOut.setFromValue(1.0);
+        	fadeOut.setToValue(0.0);
+        	fadeOut.play();
         }
         
         if (currentSpeaker.equals("คเชน")) {

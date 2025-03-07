@@ -148,13 +148,27 @@ public class Chapter6 extends Chapter {
 	    public void updateSpeakerVisibility() {
 	        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
 	        
-	        // Update speaker visibility without animations
+	        if (currentTextIndex == 0) {
+	        	arisaImage.setOpacity(0);
+	        }
+	        
 	        if (currentSpeaker.equals("คเชน")) {
 	            cashenImage.setOpacity(1.0);
-	            arisaImage.setOpacity(0.6);
-	        } else {
+	            if (arisaImage.getOpacity() > 0) {
+	            	arisaImage.setOpacity(0.6);
+	            }
+	        } 
+	        else if (currentSpeaker.equals("อาริสา") || currentSpeaker.equals("???")) {
 	            cashenImage.setOpacity(0.6);
-	            arisaImage.setOpacity(1.0);
+	            if (arisaImage.getOpacity() == 0) {
+	            	FadeTransition fadeIn = new FadeTransition(Duration.seconds(2), arisaImage);
+	                fadeIn.setFromValue(0.0);
+	                fadeIn.setToValue(1.0);
+	                fadeIn.play();
+	            }
+	            else {
+	            	arisaImage.setOpacity(1.0);
+	            }
 	        }
 	    }
 
