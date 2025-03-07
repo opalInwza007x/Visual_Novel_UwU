@@ -37,6 +37,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import logic.GameLogic;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.net.URL;
@@ -326,4 +327,86 @@ public class Chapter3 extends Chapter {
         // Play the time skip animation
         timeSkipSequence.play();
     }
+	
+	@Override
+	public void createAnswerBoxFor2(Stage primaryStage, TextFlow textBox) {
+        // Remove existing answer box if it exists
+        if (choiceBoxStack != null && stackPane.getChildren().contains(choiceBoxStack)) {
+            stackPane.getChildren().remove(choiceBoxStack);
+        }
+        
+        Button answerButton1 = createButton(
+            storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.answer1Index],
+            "rgba(0, 128, 255, 0.8)",
+            18
+        );
+        
+        Button answerButton2 = createButton(
+            storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.answer2Index],
+            "rgba(0, 128, 255, 0.8)",
+            18
+        );
+
+        String buttonStyle = "-fx-background-radius: 30; -fx-text-fill: white; -fx-font-weight: bold; " +
+                             "-fx-padding: 15 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 5, 0, 0, 1);";
+
+        answerButton1.setStyle(answerButton1.getStyle() + buttonStyle);
+        answerButton2.setStyle(answerButton2.getStyle() + buttonStyle);
+
+        VBox answerBox = new VBox(10);
+
+        // Set up vertical box for buttons
+        answerBox.setAlignment(Pos.CENTER);
+        answerBox.getChildren().addAll(answerButton1, answerButton2);
+        answerBox.setPadding(new Insets(20));
+        answerBox.setSpacing(20);
+
+        // Create background for choice box
+        Rectangle choiceBoxBg = new Rectangle(300, 150);
+        choiceBoxBg.setArcWidth(30);
+        choiceBoxBg.setArcHeight(30);
+        choiceBoxBg.setFill(Color.rgb(20, 20, 60, 0.8));
+
+        // Add glow effect to the choice box
+        DropShadow choiceBoxShadow = new DropShadow();
+        choiceBoxShadow.setColor(Color.CORNFLOWERBLUE);
+        choiceBoxShadow.setRadius(20);
+        choiceBoxShadow.setSpread(0.2);
+        choiceBoxBg.setEffect(choiceBoxShadow);
+
+        // Stack the choice box elements
+        choiceBoxStack = new StackPane(choiceBoxBg, answerBox);
+
+        StackPane.setAlignment(choiceBoxStack, Pos.CENTER);
+        stackPane.getChildren().add(choiceBoxStack);
+
+        // Set up button actions
+        answerButton1.setOnAction(event -> {
+            if (textBox != null) {
+                textBox.getChildren().clear();
+            }
+  
+            if (getChapterNumber() == 3 && currentTextIndex >= 19) {
+            	GameLogic.getInstance().setHaveMeat(true);
+            }
+   
+
+            stackPane.getChildren().remove(choiceBoxStack);
+            choiceBoxStack = null; // Clear the reference
+            
+            handleNextText(primaryStage, textBox, Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion1Index]));
+        });
+
+        answerButton2.setOnAction(event -> {
+            if (textBox != null) {
+                textBox.getChildren().clear();
+            }
+
+            stackPane.getChildren().remove(choiceBoxStack);
+            choiceBoxStack = null; // Clear the reference
+            
+            handleNextText(primaryStage, textBox, Integer.parseInt(storyTexts.getStoryTexts().get(currentTextIndex)[TextBase.quesion2Index]));
+        });
+    }
+	
 }
