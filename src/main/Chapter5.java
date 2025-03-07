@@ -196,7 +196,7 @@ public class Chapter5 extends Chapter {
     	// exitAnimation(primaryStage);
     	backgroundMusic.stop();
     	
-    	Chapter5 chapter5 = new Chapter5();
-        chapter5.startChapter(primaryStage);
+    	Chapter6 chapter6 = new Chapter6();
+        chapter6.startChapter(primaryStage);
     }
 }

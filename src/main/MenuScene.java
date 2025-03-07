@@ -185,7 +185,9 @@ public class MenuScene {
         FadeTransition fadeOut = new FadeTransition(Duration.seconds(1), primaryStage.getScene().getRoot());
         fadeOut.setFromValue(1);
         fadeOut.setToValue(0);
-        fadeOut.setOnFinished(e -> new Chapter5().startChapter(primaryStage));
+
+        fadeOut.setOnFinished(e -> new Chapter6().startChapter(primaryStage));
+
         fadeOut.play();
     }
 }

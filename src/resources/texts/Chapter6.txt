@@ -1,4 +1,5 @@
 normal$คเชน$$Empty$คเชน$read
+normal$คเชน$เห้อ... หวังว่าจะไม่มีตัวอะไรแถวนี้นะ$Empty$คเชน$read
 normal$คเชน$อาริสา! เธออยู่ไหนกันนะ?$Empty$คเชน$read
 shy3$อาริสา$... คเชน$Empty$อาริสา$read
 normal$คเชน$อาริสา! ฉันมา—$Empty$คเชน$read
