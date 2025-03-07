@@ -140,17 +140,46 @@ public class Chapter3 extends Chapter {
 	}
 
 	@Override
-	public void updateCharacterImages() {
-		String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
-		String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
+    public void updateCharacterImages() {
+        String currentSpeaker = storyTexts.getStoryTexts().get(currentTextIndex)[1];
+        String emotion = storyTexts.getStoryTexts().get(currentTextIndex)[0];
+        
+        try {
+            if (currentSpeaker.equals("คเชน")) {
+                String imagePath = getImagePath("คเชน", emotion);
+                loadAndSetImage(cashenImage, imagePath);
+            } else {
+                String imagePath = getImagePath("อาริสา", emotion);
+                loadAndSetImage(arisaImage, imagePath);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load image: " + e.getMessage());
+            // Optionally load a fallback image
+        }
+    }
 
-		if (currentSpeaker.equals("คเชน")) {
-			cashenImage.setImage(new Image(getClass().getResource(getImagePath("คเชน", emotion)).toExternalForm()));
-		} 
-		else if (currentSpeaker.equals("อาริสา")) {
-			arisaImage.setImage(new Image(getClass().getResource(getImagePath("อาริสา", emotion)).toExternalForm()));
-		}
-	}
+    private void loadAndSetImage(ImageView imageView, String imagePath) {
+        try {
+            // Try using class resource first (works in IDE)
+            java.net.URL url = getClass().getResource(imagePath);
+            
+            // If that fails, try using class loader (better for JAR files)
+            if (url == null) {
+                url = getClass().getClassLoader().getResource(imagePath.startsWith("/") ? 
+                    imagePath.substring(1) : imagePath);
+            }
+            
+            // If we have a valid URL, set the image
+            if (url != null) {
+                imageView.setImage(new Image(url.toExternalForm()));
+            } else {
+                System.err.println("Could not find resource: " + imagePath);
+                // Optionally set a default/placeholder image
+            }
+        } catch (Exception e) {
+            System.err.println("Error loading image " + imagePath + ": " + e.getMessage());
+        }
+    }
 
 	@Override
 	public void updateSpeakerVisibility() {
